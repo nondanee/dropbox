@@ -88,5 +88,10 @@ def route(request):
             yield from fs.file_delete(cursor,file_ids)
             request.app.loop.create_task(fs.file_delete_async(request.app['pool'],file_ids))
 
+
+        yield from connect.commit()
+        yield from cursor.close()
+        connect.close()
+        
         return toolbox.javaify(200,"success")
         
