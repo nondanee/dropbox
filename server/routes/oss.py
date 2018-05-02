@@ -9,6 +9,11 @@ qiniu_secret_key = os.environ["QINIU_SECRET"]
 
 @asyncio.coroutine
 def transmit(temp_path,store_key):
+
+    if not os.path.exist(temp_path):
+        print('ok it saved')
+
+    print(temp_path)
     print(store_key)
     put_policy = json.dumps({
       "scope": "{}:{}".format(qiniu_bucket_name,store_key),
