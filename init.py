@@ -36,7 +36,6 @@ try:
             md5 varchar(32) not null,
             share tinyint(1) not null,
             status tinyint(1) not null,
-            constraint seek unique (directory,name),
             primary key(id)
         )
         ''')
