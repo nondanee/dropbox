@@ -10,7 +10,7 @@ qiniu_secret_key = os.environ["QINIU_SECRET"]
 @asyncio.coroutine
 def transmit(temp_path,store_key):
 
-    if os.path.exist(temp_path):
+    if os.path.exists(temp_path):
         print('ok it saved')
 
     print(temp_path)
