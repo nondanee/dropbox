@@ -1,4 +1,4 @@
-import os, pymysql
+import os, pymysql, urllib.parse
 
 database_url = os.environ["CLEARDB_DATABASE_URL"]
 urllib.parse.uses_netloc.append("mysql")
