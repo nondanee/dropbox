@@ -10,6 +10,7 @@ from aiohttp_session import setup, get_session, session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 
 from . import routes
+# import routes
 
 working_directory = pathlib.Path(__file__).resolve().parents[1]
 
@@ -32,7 +33,7 @@ def create_pool(app):
 
 @asyncio.coroutine
 def init(loop=None):
-    app = web.Application(loop=loop)
+    app = web.Application(loop=loop,client_max_size=0)
     app.on_startup.append(create_pool)
 
     app["working_dir"] = str(working_directory)
@@ -54,7 +55,7 @@ def main():
     loop = asyncio.get_event_loop()
     app = init(loop)
 
-    web.run_app(app, host = config.get("server", "host"), port = config.getint("server", "port"))
+    web.run_app(app, host='0.0.0.0', port=8080)
 
 if __name__ == '__main__':
     main()

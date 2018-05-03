@@ -1,7 +1,7 @@
 import asyncio
-import os, re, uuid, hashlib, datetime
+import os, re, uuid, hashlib, datetime, json
 from . import toolbox, oss, mask, fs
-from aiohttp import web
+from aiohttp import ClientSession
 from aiohttp_session import get_session
 
 @asyncio.coroutine
@@ -31,8 +31,6 @@ def route(request):
             yield from cursor.close()
             connect.close()
             return toolbox.javaify(400,"target error")
-
-        temp_dir = request.app["temp_dir"]
 
         try:
             reader = yield from request.multipart()
@@ -66,30 +64,48 @@ def route(request):
             connect.close()
             return toolbox.javaify(400,"directory exists")
 
-        size = 0
-        temp_path = os.path.join(temp_dir,str(uuid.uuid4()))
-        f = open(temp_path,'wb')
-        md5 = hashlib.md5()
         now = datetime.datetime.now()
+        # size = 0
+        # temp_path = os.path.join(request.app["temp_dir"],str(uuid.uuid4()))
+        # f = open(temp_path,'wb')
+        # md5 = hashlib.md5()
         
-        while True:
+        # while True:
 
-            try:
-                chunk = yield from part.read_chunk()  # 8192 bytes by default
-            except:
-                yield from cursor.close()
-                connect.close()
-                return toolbox.javaify(415,"unsupported media type")
+        #     try:
+        #         chunk = yield from part.read_chunk()  # 8192 bytes by default
+        #     except:
+        #         yield from cursor.close()
+        #         connect.close()
+        #         return toolbox.javaify(415,"unsupported media type")
 
-            if not chunk:
-                md5 = md5.hexdigest()
-                f.close()
-                file_type = fs.mime_detect(temp_path)
-                break
-            else:
-                size += len(chunk)
-                f.write(chunk)
-                md5.update(chunk)
+        #     if not chunk:
+        #         md5 = md5.hexdigest()
+        #         f.close()
+        #         file_type = fs.mime_detect(temp_path)
+        #         break
+        #     else:
+        #         size += len(chunk)
+        #         f.write(chunk)
+        #         md5.update(chunk)
+
+        session = ClientSession()
+        boundary = '----------{}'.format(uuid.uuid4().hex)
+        content_type = 'multipart/form-data; boundary={}'.format(boundary)
+        try:
+            response = yield from session.post('http://up-z2.qiniu.com',data=rewrite(uid,part,boundary),headers={'Content-Type':content_type})
+            json_back = yield from response.text()
+            yield from session.close()
+            json_back = json.loads(json_back)
+            file_type = json_back["type"]
+            size = json_back["size"]
+            md5 = json_back["key"].split("/")[-1]
+        except Exception as error:
+            print(error)
+            yield from cursor.close()
+            connect.close()
+            return toolbox.javaify(500,"something wrong")
+
 
         if file_meta and file_meta[0]["type"] == "directory" and file_meta[0]["status"] == 0:
             
@@ -125,9 +141,9 @@ def route(request):
             "modify": toolbox.time_str(now)
         })
 
-        if not file_meta or md5 != file_meta[0]['md5']:
-            request.app.loop.create_task(oss.transmit(temp_path,"{}/{}".format(str(uid).zfill(8),md5)))
-            pass
+        # if not file_meta or md5 != file_meta[0]['md5']:
+        #     request.app.loop.create_task(oss.transmit(temp_path,"{}/{}".format(str(uid).zfill(8),md5)))
+        #     pass
         
         yield from connect.commit()
         yield from cursor.close()
@@ -143,3 +159,25 @@ def route(request):
             "icon": "icon",
             "source": mask.generate(uid,md5,file_extension)
         })
+
+
+# python3.6 only
+async def rewrite(uid,part,boundary):
+    CRLF = '\r\n'
+    content_disposition = 'Content-Disposition: form-data; name="file"; filename="file"'
+    content_type = 'Content-Type: {}'.format(part.headers['Content-Type'])
+    yield CRLF.join(['--' + boundary,content_disposition,content_type,'','']).encode()
+    md5 = hashlib.md5()
+
+    while True:
+        chunk = await part.read_chunk()
+        if not chunk:
+            break
+        md5.update(chunk)
+        yield chunk
+
+    key = '{}/{}'.format(str(uid).zfill(8),md5.hexdigest())
+    token = oss.generate_token(key)
+    yield CRLF.join(['','--'+boundary,'Content-Disposition: form-data; name="key"','',key]).encode()
+    yield CRLF.join(['','--'+boundary,'Content-Disposition: form-data; name="token"','',token]).encode()
+    yield CRLF.join(['','--'+boundary+'--','']).encode()

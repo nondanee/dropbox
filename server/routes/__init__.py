@@ -6,10 +6,15 @@ from . import share, unshare
 from . import remove_smash_recover
 from . import source, release
 
+# from . import rewrite_test
+
 def setup_routes(app):
 
     app.router.add_route("POST", "/signin", signin.route)
     app.router.add_route("POST", "/signup", signup.route)
+
+    # app.router.add_route("POST", "/receive", rewrite_test.route)
+    # app.router.add_route("POST", "/rewrite", rewrite_test.route2)
 
     app.router.add_route("GET", "/list", ls.route)
     app.router.add_route("GET", "/tree", tree.route)
