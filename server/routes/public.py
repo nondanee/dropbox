@@ -52,9 +52,8 @@ def route(request):
                 meta = query[file_id]
                 meta['modify'] = toolbox.time_utc(meta['modify'])
                 meta['size'] = None if meta['size'] == 0 else meta['size']
-                meta['icon'] = 'icon'
                 meta['source'] = mask.generate(uid,meta['name'],os.path.splitext(meta['name'])[-1][1:]) if meta['type'] != 'directory' else ''
-                files.append(file_meta)
+                files.append(meta)
 
             data.append({
                 "mark": mask.encrypt(str(line[0]).zfill(8)),

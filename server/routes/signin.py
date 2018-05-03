@@ -1,7 +1,6 @@
 import asyncio
 import hashlib
 from . import toolbox
-from aiohttp import web
 from aiohttp_session import get_session
 
 @asyncio.coroutine
@@ -14,16 +13,13 @@ def route(request):
 
     data = yield from request.post()
 
-    if 'email' in data:
-        email = data['email'] 
-    else:
+    email = data['email'] if 'email' in data else ''
+    password = data['password'] if 'password' in data else ''
+
+    if not email:
         return toolbox.javaify(400,"miss parameter")
 
-    if 'password' in data:
-        password = data['password']
-        hash_password = hashlib.sha1(password.encode("utf-8")).hexdigest()
-    else:
-        return toolbox.javaify(400,"miss parameter")
+    hash_password = hashlib.sha1(password.encode("utf-8")).hexdigest()
 
     with (yield from request.app['pool']) as connect:
         cursor = yield from connect.cursor()

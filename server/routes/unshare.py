@@ -1,6 +1,5 @@
 import asyncio
 from . import toolbox, mask
-from aiohttp import web
 from aiohttp_session import get_session
 
 @asyncio.coroutine

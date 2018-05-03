@@ -1,5 +1,5 @@
 import asyncio, aiohttp
-import os, datetime, urllib
+import os, datetime
 from . import toolbox, oss
 
 @asyncio.coroutine

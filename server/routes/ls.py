@@ -1,7 +1,6 @@
 import asyncio
 import os
 from . import toolbox, mask, fs
-from aiohttp import web
 from aiohttp_session import get_session
 
 @asyncio.coroutine
@@ -52,7 +51,6 @@ def route(request):
                 "modify": toolbox.time_utc(line[2]),
                 "owner": "self",
                 "size": None if line[3] == 0 else line[3],
-                "icon": "icon",
                 "source": mask.generate(uid,line[4],os.path.splitext(line[0])[-1][1:]) if line[1] != 'directory' else ''
             })
 

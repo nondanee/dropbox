@@ -1,7 +1,6 @@
 import asyncio
 import datetime
 from . import toolbox, fs
-from aiohttp import web
 from aiohttp_session import get_session
 
 @asyncio.coroutine

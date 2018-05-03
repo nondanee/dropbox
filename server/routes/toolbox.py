@@ -1,14 +1,16 @@
 import asyncio
-import pytz, datetime, time, json, os, re
+import datetime, time, json, os, re
+# import pytz
 from aiohttp import web
-
 
 def time_str(time_set):
     return time_set.strftime("%Y/%m/%d %H:%M:%S")
 
 def time_utc(time_set):
-    cn_time = pytz.timezone('Asia/Shanghai').localize(time_set)
-    return cn_time.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    utc_time = time_set + datetime.timedelta(seconds=time.timezone)
+    return utc_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    # cn_time = pytz.timezone('Asia/Shanghai').localize(time_set)
+    # return cn_time.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 def time_stamp(time_set):
     return int(time.mktime(time_set.timetuple()))
@@ -25,7 +27,10 @@ def javaify(code,message,data=None):
     return web.Response(
         text = jsonify(json_dict),
         content_type = "application/json",
-        charset = "utf-8"
+        charset = "utf-8",
+        # headers = {
+        #     "Access-Control-Allow-Origin": "*"
+        # },
     )
 
 def abort(code):

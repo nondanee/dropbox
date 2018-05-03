@@ -1,10 +1,10 @@
 import asyncio
 import os, re, datetime
-import filetype, magic
 from . import toolbox
 
-def mime_hint():
-    pass
+# import filetype, magic
+# def mime_hint():
+#     pass
 
 # def mime_detect(chunk):
 #     guess_mime = magic.from_buffer(chunk,mime=True)
@@ -14,13 +14,13 @@ def mime_hint():
 #             guess_mime = kind.mime
 #     return guess_mime
 
-def mime_detect(path):
-    guess_mime = magic.from_file(path,mime=True)
-    if guess_mime == "application/octet-stream":
-        kind = filetype.guess(path)
-        if kind:
-            guess_mime = kind.mime
-    return guess_mime
+# def mime_detect(path):
+#     guess_mime = magic.from_file(path,mime=True)
+#     if guess_mime == "application/octet-stream":
+#         kind = filetype.guess(path)
+#         if kind:
+#             guess_mime = kind.mime
+#     return guess_mime
 
 
 def name_illegal(name):

@@ -1,7 +1,6 @@
 import asyncio
 import os, datetime
 from . import toolbox, fs
-from aiohttp import web
 from aiohttp_session import get_session
 
 @asyncio.coroutine
@@ -75,5 +74,4 @@ def route(request):
             "modify": toolbox.time_utc(now),
             "owner": "self",
             "size": None,
-            "icon": "icon",
         })

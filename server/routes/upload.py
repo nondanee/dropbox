@@ -65,6 +65,7 @@ def route(request):
             return toolbox.javaify(400,"directory exists")
 
         now = datetime.datetime.now()
+        
         # size = 0
         # temp_path = os.path.join(request.app["temp_dir"],str(uuid.uuid4()))
         # f = open(temp_path,'wb')
@@ -156,7 +157,6 @@ def route(request):
             "modify": toolbox.time_utc(now),
             "owner": "self",
             "size": size,
-            "icon": "icon",
             "source": mask.generate(uid,md5,file_extension)
         })
 

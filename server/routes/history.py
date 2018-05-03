@@ -1,7 +1,6 @@
 import asyncio
 import os
 from . import toolbox, mask, fs
-from aiohttp import web
 from aiohttp_session import get_session
 
 @asyncio.coroutine
@@ -57,7 +56,6 @@ def route(request):
                 "extension": os.path.splitext(line[0])[-1][1:],
                 "modify": toolbox.time_utc(line[1]),
                 "size": line[2],
-                "icon": "icon",
                 "source": mask.generate(uid,line[3],os.path.splitext(line[0])[-1][1:])
             })
 
