@@ -13,13 +13,22 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        return toolbox.javaify(403,"forbidden")
+        uid = 1
+        # return toolbox.javaify(403,"forbidden")
 
     query_parameters = request.rel_url.query
+    
+    action = request.match_info["action"] if 'action' in request.match_info else 'source'
+ 
+    filename = request.match_info["filename"] if 'filename' in request.match_info else ''
 
-    action = request.match_info["action"]
-
-    param = request.match_info["param"]
+    if 'param' in request.match_info:
+        param = request.match_info["param"]
+    elif 'source' in query_parameters:
+        param = query_parameters["source"]
+    else:
+        return toolbox.javaify(400,"bad request")
+    
     uid,md5,extension = mask.verify(uid,param)
 
     if not md5:
@@ -60,10 +69,13 @@ def route(request):
     session = aiohttp.ClientSession(headers={"Accept-Encoding": "identity"})
         
     response = yield from session.get(target_url)
+    headers = dict(response.headers)
+    if filename:
+        headers['Content-Disposition'] = '''inline; filename="{}"; filename*=utf-8' '{}'''.format(filename,urllib.parse.quote(filename))
 
     stream = aiohttp.web.StreamResponse( 
         status = response.status, 
-        headers = response.headers
+        headers = headers
     )
 
     yield from stream.prepare(request)

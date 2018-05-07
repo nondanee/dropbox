@@ -6,14 +6,13 @@ from aiohttp_session import get_session
 @asyncio.coroutine
 def route(request):
 
-    # TODO 
-    # request.headers["Referer"]
+    # TO DO request.headers["Referer"]
 
     session = yield from get_session(request)
     if 'uid' in session:
         uid = session['uid']
     else:
-        uid = 1
+        uid = 4
         # return toolbox.javaify(403,"forbidden")
 
     query_parameters = request.rel_url.query
@@ -27,23 +26,28 @@ def route(request):
     with (yield from request.app['pool']) as connect:
         cursor = yield from connect.cursor()
 
-        directory_id = yield from fs.directory_exists(cursor,uid,directory)
+        directory_check = yield from fs.directory_exists(cursor,uid,directory)
 
-        if not directory_id:
+        if not directory_check:
+            yield from cursor.close()
+            connect.close()
+            return toolbox.javaify(404,"no directory")
+        if directory_check['status'] == 0 and deleted != 'true':
             yield from cursor.close()
             connect.close()
             return toolbox.javaify(404,"no directory")
         
         yield from cursor.execute('''
-            SELECT name, type, modify, size, md5, status FROM repository WHERE directory = %s
-        ''',(directory_id))
-        out = yield from cursor.fetchall()
+            SELECT name, type, modify, size, md5, status FROM garage WHERE uid = %s AND directory = %s
+        ''',(uid,directory))
+        result = yield from cursor.fetchall()
         
         yield from cursor.close()
         connect.close()
 
         data = []
-        for line in out:
+
+        for line in result:
             if line[0] == "":
                 continue
             if line[5] == 0 and deleted == 'false':

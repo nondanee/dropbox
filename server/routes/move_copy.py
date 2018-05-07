@@ -95,7 +95,7 @@ def route(request):
                 "md5": src_file_meta[0]['md5'],
             })
 
-            yield from fs.version_sync(cursor,dst_file_meta[0]['id'])
+            # yield from fs.version_sync(cursor,dst_file_meta[0]['id'])
 
             yield from fs.file_modify(cursor,dst_directory_id,{
                 "modify": toolbox.time_str(now),
@@ -118,7 +118,7 @@ def route(request):
             index = 1
             
             while True:
-                rename = "({})".format(index).join(os.path.splitext(names[0]))
+                rename = " ({})".format(index).join(os.path.splitext(names[0]))
 
                 abandon_meta = yield from fs.file_query(cursor,directory_id,[rename])
                 if not abandon_meta:

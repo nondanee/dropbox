@@ -229,24 +229,24 @@ def file_copy(cursor,src_file_id,dst_directory_id,rename=None):
             yield from file_copy(cursor,item[0],new_file_id)
 
 
-@asyncio.coroutine
-def version_sync(cursor,file_id):
+# @asyncio.coroutine
+# def version_sync(cursor,file_id):
 
-    yield from cursor.execute('''
-        SELECT id, name, modify, size, md5 FROM repository WHERE id = %s
-    ''',(file_id))
-    
-    file_meta = yield from cursor.fetchone()
-    
-    yield from cursor.execute('''
-        SELECT count(*) FROM history WHERE id = %s
-    ''',(file_id))
+#     yield from cursor.execute('''
+#         SELECT id, name, modify, size, md5 FROM repository WHERE id = %s
+#     ''',(file_id))
 
-    (version,) = yield from cursor.fetchone()
+#     file_meta = yield from cursor.fetchone()
 
-    file_meta = list(file_meta)
-    file_meta.insert(1,version + 1)
+#     yield from cursor.execute('''
+#         SELECT count(*) FROM history WHERE id = %s
+#     ''',(file_id))
 
-    yield from cursor.execute('''
-        INSERT INTO history (id, version, name, modify, size, md5) VALUES (%s, %s, %s, %s, %s, %s)
-    ''',tuple(file_meta))
+#     (version,) = yield from cursor.fetchone()
+
+#     file_meta = list(file_meta)
+#     file_meta.insert(1,version + 1)
+
+#     yield from cursor.execute('''
+#         INSERT INTO history (id, version, name, modify, size, md5) VALUES (%s, %s, %s, %s, %s, %s)
+#     ''',tuple(file_meta))

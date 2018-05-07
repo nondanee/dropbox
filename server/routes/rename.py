@@ -10,7 +10,8 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        return toolbox.javaify(403,"forbidden")
+        uid = 1
+        # return toolbox.javaify(403,"forbidden")
 
     if request.content_type != "application/x-www-form-urlencoded":
         return toolbox.javaify(400,"wrong content type")
@@ -31,7 +32,7 @@ def route(request):
             "extension": os.path.splitext(name)[-1][1:],
         })
 
-    if check.name_illegal(rename):
+    if fs.name_illegal(rename):
         return toolbox.javaify(400,"name illegal")
 
 
@@ -50,9 +51,9 @@ def route(request):
         destination_meta = {}
 
         for one in file_meta:
-            if one['id'] == name:
+            if one['name'] == name:
                 source_meta = one
-            elif one['id'] == rename:
+            elif one['name'] == rename:
                 destination_meta = one
 
         now = datetime.datetime.now()
@@ -70,28 +71,20 @@ def route(request):
 
             destination_meta = {}
 
-        # if destination_check and source_check[1] = destination_check[1] == "directory":
-        #     new_path = os.path.join(target_dir,new_name)
-
-        #     destination_empty_check = yield from cursor.execute('''
-        #         SELECT id, directory FROM repository WHERE uid = %s AND directory LIKE %s
-        #     ''',(uid,"{}%".format(new_path)))
-
-        #     if not destination_empty_check:
-        #         yield from cursor.execute('''
-        #             DELETE FROM repository WHERE id = %s
-        #         ''',(source_check[0]))
-        #         yield from cursor.execute('''
-        #             UPDATE repository SET modify = %s WHERE id = %s
-        #         ''',(toolbox.time_str(now),destination_check[0]))
-        #         yield from connect.commit()
-
         if destination_meta and flag != "keep":
+
+            message = [{
+                "path": rename,
+                "type": destination_meta['type'],
+                "modify": toolbox.time_utc(destination_meta['modify']),
+                "size": None if destination_meta['size'] == 0 else destination_meta['size']
+            }]
 
             yield from cursor.close()
             connect.close()
             return toolbox.javaify(400,"file exists",[{
                 "title": "此目录下已存在同名文件,是否要保存两个文件:",
+                "message": message,
                 "button": [{
                     "name": "保留两个文件",
                     "url": "/rename",
@@ -99,12 +92,13 @@ def route(request):
                 }]
             }])
 
+        # if destination_meta:
         elif destination_meta and flag == "keep":
 
             index = 1
             
             while True:
-                rename_try = "({})".format(index).join(os.path.splitext(rename))
+                rename_try = " ({})".format(index).join(os.path.splitext(rename))
 
                 if rename_try == name:
                     yield from cursor.close()
@@ -128,15 +122,14 @@ def route(request):
                 index += 1
 
         yield from fs.file_modify(cursor,source_meta['id'],{
-            "name": renames
+            "name": rename
         })
 
-        if source_meta['type'] != 'directory':
-            yield from fs.version_sync(cursor,source_meta['id'])
+        # if source_meta['type'] != 'directory':
+        #     yield from fs.version_sync(cursor,source_meta['id'])
 
         yield from fs.file_modify(cursor,directory_id,{
             "modify": toolbox.time_str(now),
-            "name": renames
         })
         
         yield from connect.commit()

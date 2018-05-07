@@ -10,6 +10,7 @@ from aiohttp_session import setup, get_session, session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 
 from . import routes
+from . import abandon
 # import routes
 
 working_directory = pathlib.Path(__file__).resolve().parents[1]
@@ -45,7 +46,8 @@ def init(loop=None):
 
     setup(app, EncryptedCookieStorage(secret_key,max_age=1296000))
 
-    routes.setup_routes(app)
+    # routes.setup_routes(app)
+    abandon.setup_routes(app)
 
     return app
 
