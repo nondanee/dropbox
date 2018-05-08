@@ -83,7 +83,7 @@ def directory_delete(cursor,uid,path):
     ''',(uid,path))
 
     yield from cursor.execute('''
-        DELETE FROM garage WHERE uid = %s AND directory like %s
+        DELETE FROM garage WHERE uid = %s AND directory LIKE %s
     ''',(uid,'{}/%'.format(path)))
 
 @asyncio.coroutine
@@ -129,7 +129,7 @@ def directory_mark(cursor,uid,path,status):
     param_insert = [[item[0],action,item[1],status] for item in result if item[2] != 'directory']
 
     yield from cursor.execute('''
-        SELECT id, status, type from garage WHERE uid = %s AND directory like %s AND status != %s
+        SELECT id, status, type from garage WHERE uid = %s AND directory LIKE %s AND status != %s
     ''',(uid,'{}/%'.format(path),status))
     result = yield from cursor.fetchall()
     param_update += [[status,item[0]] for item in result]
@@ -208,7 +208,7 @@ def file_create(cursor,param):
 
         yield from cursor.execute('''
             INSERT INTO operation VALUES(null,%s,now(),%s,%s,%s)
-        ''',(gid,0,'',param[5]))
+        ''',(gid,0,'','{}|{}'.format(param[4],param[5])))
 
 
 @asyncio.coroutine
@@ -219,7 +219,7 @@ def file_rewrite(cursor,uid,path,param):
     directory,name = os.path.split(path)
 
     yield from cursor.execute('''
-        SELECT id, md5 from garage WHERE uid = %s AND directory = %s AND name = %s
+        SELECT id, size, md5 FROM garage WHERE uid = %s AND directory = %s AND name = %s
     ''',(uid,directory,name))
     result = yield from cursor.fetchone()
 
@@ -229,7 +229,7 @@ def file_rewrite(cursor,uid,path,param):
 
     yield from cursor.execute('''
         INSERT INTO operation VALUES(null,%s,now(),%s,%s,%s)
-    ''',(result[0],1,result[1],param[2]))
+    ''',(result[0],1,'{}|{}'.format(result[1],result[2]),'{}|{}'.format(param[1],param[2])))
 
 
 @asyncio.coroutine
@@ -265,7 +265,7 @@ def directory_rename(cursor,uid,directory,name,rename):
     param_update = [[new_path,item[0]] for item in result]
 
     yield from cursor.execute('''
-        SELECT id, directory FROM garage WHERE uid = %s AND directory like %s
+        SELECT id, directory FROM garage WHERE uid = %s AND directory LIKE %s
     ''',(uid,'{}/%'.format(path)))
     result = yield from cursor.fetchall()
     param_update += [[item[1].replace(path,new_path,1),item[0]] for item in result]
@@ -314,7 +314,7 @@ def directory_move(cursor,uid,src,dst,name,rename=''):
     param_insert = [[item[0],3,path,new_path] for item in result if item[1] != 'directory']
 
     yield from cursor.execute('''
-        SELECT id, directory, type FROM garage WHERE uid = %s AND directory like %s
+        SELECT id, directory, type FROM garage WHERE uid = %s AND directory LIKE %s
     ''',(uid,'{}/%'.format(path)))
     result = yield from cursor.fetchall()
     param_update += [[item[1].replace(path,new_path,1),item[0]] for item in result]
@@ -372,7 +372,7 @@ def directory_copy(cursor,uid,src,dst,name,rename=''):
     prepare = [[src,dst] for item in result]
 
     yield from cursor.execute('''
-        SELECT directory, name, type, size, md5, status FROM garage WHERE uid = %s AND directory like %s
+        SELECT directory, name, type, size, md5, status FROM garage WHERE uid = %s AND directory LIKE %s
     ''',(uid,'{}/%'.format(path)))
     result = yield from cursor.fetchall()
     params += [[uid,item[0].replace(path,new_path,1)] + list(item[1:]) for item in result]
