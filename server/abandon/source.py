@@ -16,51 +16,38 @@ def route(request):
         uid = 4
         # return toolbox.javaify(403,"forbidden")
 
+    action = request.match_info["action"]
+    filename = request.match_info["filename"]
+
     query_parameters = request.rel_url.query
-    
-    action = request.match_info["action"] if 'action' in request.match_info else 'source'
-    filename = request.match_info["filename"] if 'filename' in request.match_info else ''
 
-    param = ''
-    tag = ''
-
-    if 'param' in request.match_info:
-        param = request.match_info["param"]
-    elif 'source' in query_parameters:
-        param = query_parameters["source"]
-    elif 'tag' in query_parameters:
-        tag = query_parameters["tag"]
-    else:
-        return toolbox.javaify(400,"bad request")
+    size = query_parameters["size"] if 'size' in query_parameters else ''
+    source = query_parameters["source"] if 'source' in query_parameters else ''
+    tag = query_parameters["tag"] if 'tag' in query_parameters else ''
     
-    if param:
+    
+    if source:
+
+        if action in {'source':'','download':'','thumbnail':''}:
         
-        uid,md5,extension = mask.verify(uid,param)
+            oid,md5 = mask.verify(uid,source)
 
-        if not md5:
-            return toolbox.javaify(403,"forbidden")
+            if not md5:
+                return toolbox.javaify(403,"forbidden")
 
-        extension = extension.lower()
+            if action == 'source' or action == 'download':
+                target_url = oss.dynamic_url(oid,md5)
 
-        office_file = {'xls':'','xlsx':'','ppt':'','pptx':'','doc':'','docx':''}
-        photo_file = {'jpg':'','jpeg':'','gif':'','png':'','bmp':''}
+            elif action == 'thumbnail':
+                if size == 'large':
+                    target_url = oss.dynamic_url(oid,md5,'thumbnail256')
+                else:
+                    target_url = oss.dynamic_url(oid,md5,'thumbnail32')
 
-        if action == 'source':
-            target_url = oss.dynamic_url(uid,md5)
+        elif action in {'release':''}:
 
-        elif action == 'thumbnail' and extension in photo_file:
-            if request.match_info["type"] == 'list':
-                target_url = oss.dynamic_url(uid,md5,'thumbnail32')
-            elif request.match_info["type"] == 'grid':
-                target_url = oss.dynamic_url(uid,md5,'thumbnail256')
-
-        elif action == 'preview' and extension in photo_file:
-            target_url = oss.dynamic_url(uid,md5)
-
-        elif action == 'preview' and extension in office_file:
-
-            release_url = 'https://nondanee.tk/release/{}/{}.{}'.format(str(uid).zfill(8),md5,extension)
-            target_url = 'https://view.officeapps.live.com/op/view.aspx?src={}'.format(urllib.parse.quote_plus(release_url))
+            oid,md5 = mask.verify(0,source)
+            target_url = oss.dynamic_url(oid,md5)
             
         else:
             return toolbox.javaify(400,"bad request")
@@ -70,10 +57,13 @@ def route(request):
 
         tag = mask.decrypt(tag)
 
-        if not tag:
+        if not tag or action != 'download':
             return toolbox.javaify(400,"bad request")
 
         target_url = oss.bucket_url(tag)
+
+    else:
+        return toolbox.javaify(400,"bad request")
 
 
     # https://gist.github.com/jbn/fc90e3ddbc5c60c698d07b3df30004c8
@@ -83,8 +73,8 @@ def route(request):
     response = yield from session.get(target_url)
     headers = dict(response.headers)
     
-    if filename:
-        headers['Content-Disposition'] = '''attachment; filename="{}"; filename*=utf-8' '{}'''.format(filename,urllib.parse.quote(filename))
+    disposition = 'attachment' if action == 'download' else 'inline'
+    headers['Content-Disposition'] = '''{}; filename="{}"; filename*=utf-8' '{}'''.format(disposition,filename,urllib.parse.quote(filename))
 
     stream = aiohttp.web.StreamResponse( 
         status = response.status, 

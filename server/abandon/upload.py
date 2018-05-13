@@ -11,7 +11,8 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        return toolbox.javaify(403,"forbidden")
+        uid = 4
+        # return toolbox.javaify(403,"forbidden")
 
     if request.content_type != "multipart/form-data":
         return toolbox.javaify(400,"content type error")
@@ -110,7 +111,7 @@ def route(request):
             "modify": toolbox.time_utc(now),
             "owner": "self",
             "size": size,
-            "source": mask.generate(uid,md5,file_extension)
+            "source": mask.generate(uid,md5)
         })
 
 

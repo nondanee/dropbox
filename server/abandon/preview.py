@@ -16,6 +16,7 @@ def route(request):
     query_parameters = request.rel_url.query
     
     path = query_parameters["path"] if "path" in query_parameters else ''
+    version = mask.decrypt(query_parameters["version"]) if "version" in query_parameters else ''
 
     if not path:
         return toolbox.javaify(400,"miss parameter")
@@ -26,27 +27,48 @@ def route(request):
         cursor = yield from connect.cursor()
 
         yield from cursor.execute('''
-            SELECT type, modify, md5, status FROM garage WHERE uid = %s AND directory = %s AND name = %s
+            SELECT id, type, modify, size, md5, status FROM garage WHERE uid = %s AND directory = %s AND name = %s
         ''',(uid,directory,name))
 
-        result = yield from cursor.fetchone()
+        current = yield from cursor.fetchone()
+        mime = current[1]
+        modify = current[2]
+        size = current[3]
+        md5 = current[4]
+        history = []
 
-        if not result or result[3] == 0 or result[0] == 'directory':
+        if not current or current[0] == 'directory':
             yield from cursor.close()
             connect.close()
             return toolbox.javaify(400,"bad request")
 
+        if version:
+            yield from cursor.execute('''
+                SELECT occur, action, modify FROM operation WHERE id = %s AND gid = %s AND action IN (0,1)
+            ''',(version,current[0]))
+
+            history = yield from cursor.fetchone()
+
+            if not history:
+                yield from cursor.close()
+                connect.close()
+                return toolbox.javaify(400,"bad request")
+
         yield from cursor.close()
         connect.close()
 
-        source = mask.generate(uid,result[2],os.path.splitext(name)[-1][1:])
+        if history:
+            mime, size, md5 = history[2].split('|')
+            modify = history[0]
+
+        source = mask.generate(uid,md5)
 
         data = {
             "name": name,
-            "type": result[0],
-            "modify": toolbox.time_utc(result[1]),
-            "preview": source,
-            "download": source,
+            "type": mime,
+            "modify": toolbox.time_utc(modify),
+            "size": size,
+            "source": source
         }
 
         return toolbox.javaify(200,"ok",data)

@@ -86,13 +86,14 @@ def directory_delete(cursor,uid,path):
         DELETE FROM garage WHERE uid = %s AND directory LIKE %s
     ''',(uid,'{}/%'.format(path)))
 
+
 @asyncio.coroutine
 def file_mark(cursor,uid,path,status):
 
-    if status == 1:
-        action = 6
-    elif status == 0:
-        action = 5
+    if status == 0:
+        action = 7
+    elif status == 1:
+        action = 8
 
     directory,name = os.path.split(path)
 
@@ -114,10 +115,10 @@ def file_mark(cursor,uid,path,status):
 @asyncio.coroutine
 def directory_mark(cursor,uid,path,status):
 
-    if status == 1:
-        action = 6
-    elif status == 0:
-        action = 5
+    if status == 0:
+        action = 7
+    elif status == 1:
+        action = 8
 
     yield from file_mark(cursor,uid,path,status)
 
@@ -187,8 +188,11 @@ def path_recover(cursor,uid,path):
 # 2 rename
 # 3 move
 # 4 copy
-# 5 delete
-# 6 recover
+# 5 move+rename
+# 6 copy+rename
+# 7 delete
+# 8 recover
+# 9 save
 
 
 @asyncio.coroutine
@@ -208,7 +212,7 @@ def file_create(cursor,param):
 
         yield from cursor.execute('''
             INSERT INTO operation VALUES(null,%s,now(),%s,%s,%s)
-        ''',(gid,0,'','{}|{}'.format(param[4],param[5])))
+        ''',(gid,0,'','{}|{}|{}'.format(param[3],param[4],param[5])))
 
 
 @asyncio.coroutine
@@ -219,7 +223,7 @@ def file_rewrite(cursor,uid,path,param):
     directory,name = os.path.split(path)
 
     yield from cursor.execute('''
-        SELECT id, size, md5 FROM garage WHERE uid = %s AND directory = %s AND name = %s
+        SELECT id, type, size, md5 FROM garage WHERE uid = %s AND directory = %s AND name = %s
     ''',(uid,directory,name))
     result = yield from cursor.fetchone()
 
@@ -229,7 +233,7 @@ def file_rewrite(cursor,uid,path,param):
 
     yield from cursor.execute('''
         INSERT INTO operation VALUES(null,%s,now(),%s,%s,%s)
-    ''',(result[0],1,'{}|{}'.format(result[1],result[2]),'{}|{}'.format(param[1],param[2])))
+    ''',(result[0],1,'{}|{}|{}'.format(result[1],result[2],result[3]),'{}|{}'.format(param[1],param[2])))
 
 
 @asyncio.coroutine
@@ -274,10 +278,10 @@ def directory_rename(cursor,uid,directory,name,rename):
         UPDATE garage SET directory = %s WHERE id = %s
     ''',param_update)
 
-
 @asyncio.coroutine
 def file_move(cursor,uid,src,dst,name,rename=''):
 
+    action = 3 if not rename else 5
     rename = name if not rename else rename
 
     yield from cursor.execute('''
@@ -293,7 +297,7 @@ def file_move(cursor,uid,src,dst,name,rename=''):
     if result[1] != 'directory':
         yield from cursor.execute('''
             INSERT INTO operation VALUES(null,%s,now(),%s,%s,%s)
-        ''',(result[0],3,src,dst))
+        ''',(result[0],action,'{}|{}'.format(src,name),'{}|{}'.format(dst,rename)))
 
 
 @asyncio.coroutine
@@ -332,6 +336,7 @@ def directory_move(cursor,uid,src,dst,name,rename=''):
 @asyncio.coroutine
 def file_copy(cursor,uid,src,dst,name,rename=''):
 
+    action = 4 if not rename else 6
     rename = name if not rename else rename
 
     yield from cursor.execute('''
@@ -351,7 +356,7 @@ def file_copy(cursor,uid,src,dst,name,rename=''):
 
     yield from cursor.execute('''
         INSERT INTO operation VALUES(null,%s,now(),%s,%s,%s)
-    ''',(gid,4,src,dst))
+    ''',(gid,action,'{}|{}'.format(src,name),'{}|{}'.format(dst,rename)))
 
 
 @asyncio.coroutine

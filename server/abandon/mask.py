@@ -65,17 +65,17 @@ def decrypt(string,key=KEY):
     try: return bytes.decode(message)
     except: return
 
-def generate(uid,md5,extension,key=None):
-    message = "{}:{}:{}".format(str(uid).zfill(8),md5,extension)
+def generate(uid,md5,key=None):
+    message = "{}:{}".format(str(uid).zfill(8),md5)
     if key == None: key = uid
     return encrypt(message,key)
 
 def verify(key,string):
     message = decrypt(string,key)
-    if not message: return None, None, None
+    if not message: return None, None
     message = message.split(":")
-    if len(message) != 3: return None, None, None
-    return int(message[0]), message[1], message[2]
+    if len(message) != 2: return None, None
+    return int(message[0]), message[1]
 
 
 

@@ -1,0 +1,186 @@
+html,body{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	/*background-image: url(6.png);*/
+	display: flex;
+	font-family: "AtlasGrotesk","PingFang SC"
+}
+
+button{
+	border: 0;
+	padding: 0;
+	outline: 0;
+	background-color: rgba(0,0,0,0);
+	cursor: pointer;
+	font-weight: normal;
+	font-style: normal;
+	border-radius: 4px;
+	user-select: none;
+}
+button:focus{
+	box-shadow: 0 0 0 3px var(--themeColorAlpha);
+}
+
+a{
+	outline:none;
+}
+a:link,a:hover,a:visited,a:active{
+	color: inherit;
+	text-decoration: inherit;
+}
+b{
+	font-weight: 500;
+}
+
+input{
+	border: none;
+	font-family: inherit;
+	outline: none;
+	background: none;
+	padding: 0;
+}
+
+
+:root{
+	--themeColor: rgb(133,89,165);/*#8559a5*/
+	--themeColorBlack: rgb(67,45,83);
+	--themeColorAlpha: rgba(133,89,165,0.5);
+	--themeColorDark: rgb(123,80,155);
+	--themeColorLight: rgb(150,110,179);/*#966eb3*/
+	--themeColorLightAlpha: rgba(150,110,179,0.3);
+}
+
+
+@font-face{font-family:'icomoon';
+	src:url("../font/icomoon.ttf") format("truetype");
+	font-weight:400;
+	font-style:normal
+}
+/*@font-face{
+	font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-Thin-Web-vflugmAly.woff2") format("woff2");
+	font-weight:100;
+	font-style:normal
+}*/
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-ThinItalic-Web-vflP-manv.woff2") format("woff2");
+	font-weight:100;
+	font-style:italic
+}*/
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-Light-Web-vflvAXMid.woff2") format("woff2");
+	font-weight:300;
+	font-style:normal
+}*/
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-LightItalic-Web-vflq-t642.woff2") format("woff2");
+	font-weight:300;
+	font-style:italic
+}*/
+@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-Regular-Web-vflk7bxjs.woff2") format("woff2");
+	font-weight:400;
+	font-style:normal
+}
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("font/AtlasGrotesk-RegularItalic-Web-vflOIRvCj.woff2") format("woff2");
+	font-weight:400;
+	font-style:italic
+}*/
+@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-Medium-Web-vfl38XiTL.woff2") format("woff2");
+	font-weight:500;
+	font-style:normal
+}
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-MediumItalic-Web-vfliTEIPs.woff2") format("woff2");
+	font-weight:500;
+	font-style:italic
+}*/
+@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-Bold-Web-vfl39K48X.woff2") format("woff2");
+	font-weight:700;
+	font-style:normal
+}
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-BoldItalic-Web-vflk44sx_.woff2") format("woff2");
+	font-weight:700;
+	font-style:italic
+}*/
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-Black-Web-vflp3rI0W.woff2") format("woff2");
+	font-weight:900;
+	font-style:normal
+}*/
+/*@font-face{font-family:'AtlasGrotesk';
+	src:url("../font/AtlasGrotesk-BlackItalic-Web-vflCRgLG7.woff2") format("woff2");
+	font-weight:900;
+	font-style:italic
+}*/
+
+
+
+@font-face {
+	font-family: 'SharpGrotesk';
+	src: url("../font/SharpGroteskDBBook20-vflytuLBR.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'SharpGrotesk';
+	src: url("../font/SharpGroteskDBBookItalic20-vfl7yoy7d.woff2") format("woff2");
+	font-weight: 400;
+	font-style: italic
+}
+
+@font-face {
+	font-family: 'SharpGrotesk';
+	src: url("../font/SharpGroteskDBMedium20-vfloPliP8.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'SharpGrotesk';
+	src: url("../font/SharpGroteskDBMediumItalic20-vflv22JcL.woff2") format("woff2");
+	font-weight: 500;
+	font-style: italic
+}
+
+@font-face {
+	font-family: 'SharpGrotesk';
+	src: url("../font/SharpGroteskDBSmBold20-vflXXkRjd.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'SharpGrotesk';
+	src: url("../font/SharpGroteskDBSmBoldItalic20-vfluPUwVh.woff2") format("woff2");
+	font-weight: 600;
+	font-style: italic
+}
+
+@font-face {
+	font-family: 'SharpGroteskWide';
+	src: url("../font/SharpGroteskDBBook22-vflSTo4EL.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'SharpGroteskWide';
+	src: url("../font/SharpGroteskDBMedium22-vflPPMtcG.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal
+}
+
+@font-face {
+	font-family: 'SharpGroteskWide';
+	src: url("../font/SharpGroteskDBSmBold22-vfl6_hloj.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal
+}

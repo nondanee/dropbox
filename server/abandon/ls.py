@@ -18,7 +18,7 @@ def route(request):
     query_parameters = request.rel_url.query
     
     directory = query_parameters["dir"] if "dir" in query_parameters else ''
-    deleted = query_parameters["del"] if "del" in query_parameters else ''
+    # deleted = query_parameters["del"] if "del" in query_parameters else ''
 
     if not directory:
         return toolbox.javaify(400,"miss parameter")
@@ -32,10 +32,10 @@ def route(request):
             yield from cursor.close()
             connect.close()
             return toolbox.javaify(404,"no directory")
-        if directory_check['status'] == 0 and deleted != 'true':
-            yield from cursor.close()
-            connect.close()
-            return toolbox.javaify(404,"no directory")
+        # if directory_check['status'] == 0 and deleted != 'true':
+        #     yield from cursor.close()
+        #     connect.close()
+        #     return toolbox.javaify(404,"no directory")
         
         yield from cursor.execute('''
             SELECT name, type, modify, size, md5, status FROM garage WHERE uid = %s AND directory = %s
@@ -50,8 +50,8 @@ def route(request):
         for line in result:
             if line[0] == "":
                 continue
-            if line[5] == 0 and deleted == 'false':
-                continue
+            # if line[5] == 0 and deleted == 'false':
+            #     continue
             data.append({
                 "name": line[0],
                 "type": line[1],
@@ -59,7 +59,7 @@ def route(request):
                 "modify": toolbox.time_utc(line[2]),
                 "owner": "self",
                 "size": None if line[3] == 0 else line[3],
-                "source": mask.generate(uid,line[4],os.path.splitext(line[0])[-1][1:]) if line[1] != 'directory' else '',
+                "source": mask.generate(uid,line[4]) if line[1] != 'directory' else '',
                 "status": line[5]
             })
 

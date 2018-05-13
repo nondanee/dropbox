@@ -1,0 +1,253 @@
+.pad{
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+.content{
+	width: 1440px;
+	flex-shrink: 1;
+	display: flex;
+	overflow: hidden;
+}
+
+.brand,
+.form{
+/*	flex-grow: 0;
+	flex-shrink: 0;*/
+	display: flex;
+	flex-direction: column;
+}
+
+.brand .content,
+.form .content{
+	flex-grow: 1;
+}
+
+.brand{
+	flex: 2;
+	/*width: calc(2/3 * 100%);*/
+	background-color: var(--themeColorDark);
+}
+.pad:first-child{
+	background-color: var(--themeColorDark);
+}
+.form{
+	flex: 1;
+	/*width: calc(1/3 * 100%);*/
+}
+
+.brand .content{
+	max-width: 960px;
+}
+.form .content{
+	max-width: 480px;
+}
+
+.brand .header,
+.form .header{
+	width: 100%;
+	height: 90px;
+	padding: 0 60px;
+	box-sizing: border-box;
+	display: flex;
+	flex-shrink: 0;
+}
+
+.brand .slogan{
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 120px;
+	margin: auto;
+}
+
+.header>div{
+	margin: auto 0;
+}
+.link:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.brand .header .logo{
+	font-size: 36px;
+	font-family: 'icomoon';
+	color: rgba(255,255,255,0.8);
+	margin-right: 4px;
+}
+.brand .header .logo::after{
+	content: "\e900"
+}
+.brand .header .title{
+	font-family: 'SharpGrotesk';
+	font-size: 27px;
+	font-weight: 500;
+	color: #fff;
+	margin-right: 34px;
+}
+.brand .header .link{
+	color: #fff;
+	font-size: 16px;
+	margin: auto 15px;
+}
+
+.form .header{
+	justify-content: flex-end;
+}
+.form .header .link{
+	color: #000;
+	font-size: 16px;
+	margin-left: 30px;
+}
+
+@media screen and (min-width: 375px){
+	.slogan .title{
+		font-size: calc(40px + 31 * ((100vw - 375px) / 1065));
+	}
+}
+
+@media screen and (min-width: 1440px){
+	.slogan .title{
+		font-size: 71px;
+	}
+}
+
+
+.slogan .title{
+	font-weight: 500;
+	font-family: 'SharpGroteskWide';
+	line-height: 1.11em;
+	margin-bottom: 50px;
+	letter-spacing: -1px;
+	color: rgba(255,255,255,0.8);
+}
+
+.slogan .text{
+	margin-top: 18px;
+	margin-bottom: 106px;
+	width: 360px;
+	font-size: 18px;
+	line-height: 28px;
+	color: #fff;
+}
+
+.form .block{
+	margin: auto;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 20px 60px;
+}
+
+.block .title{
+	font-size: 25px;
+	line-height: 1.14286;
+	font-family: 'SharpGrotesk';
+	font-weight: 500;
+}
+
+.block .switch{
+	font-size: 12px;
+	line-height: 2.28571;
+	font-family: 'Atlas Grotesk';
+	font-weight: 400;
+	display: flex;
+	color: #000;
+}
+.switch .trigger{
+	color: var(--themeColor);
+	cursor: pointer;
+}
+.trigger:hover{
+	text-decoration: underline;
+}
+
+form{
+	padding: 20px 0;
+}
+
+form .message{
+	width: 100%;
+	padding: 10px 0;
+	color: #d5001f;
+	font-size: 14px;
+	display: none;
+}
+form .message.thin{
+	padding: 0;
+	padding-bottom: 2px;
+}
+form .message.show{
+	display: block;
+}
+form input.error{
+	border: 1px solid #d5001f;
+}
+
+form input,
+form button{
+	height: 44px;
+	border-radius: 0;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: 'Atlas Grotesk';
+	font-weight: 400;
+}
+
+form input{
+	display: block;
+	font-size: 14px;
+	font-weight: 400;
+	padding: 8px 18px;
+	color: #707070;
+	border: 1px solid #c2c2c2;
+	width: 100%;
+	margin-bottom: 18px;
+}
+
+form input:focus{
+	border: 1px solid #000;
+}
+
+form .checkbox{
+	display: flex;
+	margin: 10px 0;
+	height: 20px;
+	font-size: 14px;
+	color: #707070;
+	cursor: pointer;
+}
+form .checkbox .link{
+	color: var(--themeColor);
+	margin-left: 4px;
+}
+form .checkbox::before{
+	font-family: 'icomoon';
+	content: "\e90d";
+	border: 1px solid #c2c2c2;
+	width: 20px;
+	height: 20px;
+	box-sizing: border-box;
+	text-align: center;
+	font-size: 16px;
+	line-height: 1.2;
+	color: transparent;
+	margin-right: 10px;
+}
+form .checkbox.check::before{
+	border-color: var(--themeColor);
+	background-color: var(--themeColor);
+	color: #fff;
+}
+
+form button{
+    background: var(--themeColor);
+    color: #fff;
+    border: none;
+    padding: 0 16px;
+	font-size: 16px;
+	margin-top: 18px;
+}
+form button:hover{
+	background-color: var(--themeColorLight);
+}
+form button:focus{
+	box-shadow: 0 0 0 1px var(--themeColorAlpha);
+}

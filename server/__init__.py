@@ -39,15 +39,19 @@ def init(loop=None):
 
     app["working_dir"] = str(working_directory)
     app["temp_dir"] = str(working_directory/"temp")
+    app["session_expire"] = 1296000
 
     # fernet_key = fernet.Fernet.generate_key()
     fernet_key = b'wAYavr8zyR2kvmf1uXGko4MdGJ8cpDFOUW0lHIxoQ-I='
     secret_key = base64.urlsafe_b64decode(fernet_key)
-
-    setup(app, EncryptedCookieStorage(secret_key,max_age=1296000))
+    # 
+    setup(app, EncryptedCookieStorage(secret_key))
 
     # routes.setup_routes(app)
     abandon.setup_routes(app)
+
+    app.add_routes([web.static('/static','./static',show_index=True)])
+
 
     return app
 

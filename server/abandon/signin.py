@@ -15,6 +15,7 @@ def route(request):
 
     email = data['email'] if 'email' in data else ''
     password = data['password'] if 'password' in data else ''
+    remember = data['remember'] if 'remember' in data else ''
 
     if not email:
         return toolbox.javaify(400,"miss parameter")
@@ -30,9 +31,15 @@ def route(request):
         yield from cursor.close()
         connect.close()
 
+        session.clear()
+
         if check:
             session["uid"] = check[0]
+            if remember == 'true':
+                session["remember"] = True
+                session.max_age = request.app["session_expire"]
+            else:
+                session.max_age = None
             return toolbox.javaify(200,"ok")
         else:
-            session.clear()
             return toolbox.javaify(403,"forbidden")
