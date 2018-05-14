@@ -8,10 +8,13 @@ def name_illegal(name):
     else:
         return False
 
-
+# b is in a
 def path_involve(path_a,path_b):
     path_a = list(filter(None,path_a.split('/')))
     path_b = list(filter(None,path_b.split('/')))
+
+    if len(path_a) > len(path_b):
+        return False
     
     involve = True if path_b else False
     for index in range(len(path_b)):
@@ -233,7 +236,7 @@ def file_rewrite(cursor,uid,path,param):
 
     yield from cursor.execute('''
         INSERT INTO operation VALUES(null,%s,now(),%s,%s,%s)
-    ''',(result[0],1,'{}|{}|{}'.format(result[1],result[2],result[3]),'{}|{}'.format(param[1],param[2])))
+    ''',(result[0],1,'{}|{}|{}'.format(result[1],result[2],result[3]),'{}|{}|{}'.format(param[0],param[1],param[2])))
 
 
 @asyncio.coroutine
