@@ -52,7 +52,7 @@ def route(request):
 
         stream = aiohttp.web.StreamResponse( 
             status = response.status, 
-            headers = headers
+            headers = response.headers
         )
 
         yield from stream.prepare(request)
