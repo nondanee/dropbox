@@ -12,13 +12,12 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        uid = 4
-        # return toolbox.javaify(403,"forbidden")
+        # uid = 4
+        return toolbox.javaify(403,"forbidden")
 
     query_parameters = request.rel_url.query
     
     directory = query_parameters["dir"] if "dir" in query_parameters else ''
-    # deleted = query_parameters["del"] if "del" in query_parameters else ''
 
     if not directory:
         return toolbox.javaify(400,"miss parameter")
@@ -63,4 +62,4 @@ def route(request):
                 "status": line[5]
             })
 
-        return toolbox.javaify(200,"ok",data)
+        return toolbox.javaify(200,"ok" if directory_check['status'] == 1 else "care",data)

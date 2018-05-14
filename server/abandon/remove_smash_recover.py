@@ -10,8 +10,8 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        uid = 4
-        # return toolbox.javaify(403,"forbidden")
+        # uid = 4
+        return toolbox.javaify(403,"forbidden")
 
     if request.content_type != "application/x-www-form-urlencoded":
         return toolbox.javaify(400,"wrong content type")

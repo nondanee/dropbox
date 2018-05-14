@@ -1,0 +1,218 @@
+.preview-window{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	background-color: #f9f9f9;
+	z-index: 5;
+}
+
+.preview-window>.title-bar{
+	width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    height: 63px;
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    flex-shrink: 0;
+}
+
+.preview-window>.title-bar>.back{
+	width: 32px;
+	height: 32px;
+	font-family: 'icomoon';
+	font-size: 28px;
+	margin: auto 4px;
+	padding-left: 10px;
+	box-sizing: content-box;
+	color: #6f6f6f;
+}
+
+.preview-window>.title-bar>.back::after{
+	content: '\e916';
+}
+.preview-window>.title-bar>.back:focus{
+	box-shadow: none;
+}
+
+.preview-window>.title-bar>.item-information{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.preview-window>.title-bar>.item-information>.item-name{
+	font-size: 14px;
+	color: #252525;
+	margin-top: 2px;
+}
+
+.preview-window>.title-bar>.item-information>.item-modify{
+	display: flex;
+	font-size: 12px;
+	color: #6f6f6f;
+}
+
+.preview-window>.title-bar>.item-information>.item-modify>.link{
+	margin-left: 3px;
+	cursor: pointer;
+}
+
+.preview-window>.title-bar>.item-information>.item-modify>.link:hover{
+	text-decoration: underline;
+}
+
+.preview-window>.title-bar>.pad{
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+.preview-window>.title-bar>.operate{
+	position: relative;
+	display: flex;
+	/*margin-right: 63px;*/
+}
+
+.preview-window>.title-bar>.operate button{
+	padding: 0 16px;
+	height: 32px;
+	font-size: 14px;
+	border-width: 1px;
+	border-style: solid;
+	margin: auto 0;
+	margin-left: 8px;
+	border-color: transparent;
+}
+.preview-window>.title-bar>.operate button:focus{
+	box-shadow: 0 0 0 2px var(--themeColorAlpha);
+}
+
+.preview-window>.title-bar>.operate button.default{
+	background-color: var(--themeColor);
+	border-color: var(--themeColor);
+	color: #fff;
+}
+.preview-window>.title-bar>.operate button.default:hover
+{
+	background: linear-gradient(var(--themeColorLight), var(--themeColor));
+}
+/*.preview-window>.title-bar>.operate button.optional::after{
+	content: ' ▾';
+}*/
+.preview-window>.title-bar>.operate button.optional{
+	color: #252525;
+	border-color: #c6c6c6;
+}
+.preview-window>.title-bar>.operate button.optional:hover{
+	color: var(--themeColor);
+	border-color: var(--themeColor);
+}
+.preview-window>.title-bar>.operate button.more::before{
+	content: '\e902'
+}
+.preview-window>.title-bar>.operate button.more{
+	font-family: 'icomoon';
+	padding: 0;
+	width: 34px;
+	font-size: 32px;
+	line-height: 30px;
+	color: #6f6f6f;
+	margin-right: 8px;
+}
+.preview-window>.title-bar>.operate button.more:hover{
+	color: var(--themeColor);
+}
+
+.item-content{
+	height: calc(100% - 63px);
+	display: flex;
+	overflow: hidden;
+}
+
+
+.item-content>.error{
+	width: 240px;
+	height: 260px;
+	margin: auto;
+	text-align: center;
+}
+.item-content>.error>.message
+{
+	color: #252525;
+	font-size: 20px;
+}
+.item-content>.error>.item-about
+{
+	color: #6f6f6f;
+    font-size: 12px;
+    margin: 8px 0px;
+	word-break: break-all;
+}
+.item-content>.error>.download{
+	background-color: var(--themeColor);
+	color: white;
+	height: 32px;
+	padding: 0 16px;
+	font-size: 14px;
+}
+.item-content>.error>.download:hover{
+	background-color: var(--themeColorLight);
+}
+.item-content>.error>.link{
+	display: block;
+	font-size: 14px;
+	margin-top: 8px;
+	color: var(--themeColor);
+	cursor: pointer;
+}
+.item-content>.error>.link:hover{
+	text-decoration: underline;
+}
+
+
+
+
+.item-content>img{
+	margin: auto;
+}
+.item-content iframe{
+	border: none;
+	width: 100%;
+	height: 100%;
+}
+.item-content iframe.office{
+	height: calc(90px + 100%);
+	margin-top: -90px;
+}
+.item-content video{
+	height: 100%;
+	margin: 0 auto;
+}
+.item-content button:focus{
+	box-shadow: initial;
+}
+.item-content .video-js{
+	width: 100%;
+	height: 100%;
+	background-color: transparent !important;
+}
+.item-content .audiojs{
+	margin: auto;
+}
+
+
+.video-js .vjs-icon-placeholder{
+	line-height: 42px;
+}
+.video-js .vjs-control-bar{
+	background-color: rgba(50,50,50,0.7) !important;
+}
+.video-js .vjs-control-bar .vjs-icon-placeholder:before{
+	line-height: 2em !important;
+}
+.video-js .vjs-slider,
+.video-js .vjs-load-progress,
+.video-js .vjs-load-progress div{
+	background-color: rgba(131,131,131,0.5) !important;
+}

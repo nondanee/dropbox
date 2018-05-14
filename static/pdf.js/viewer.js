@@ -28,9 +28,9 @@ var TEXT_LAYER_MODE = 0; // DISABLE
 // var MAX_IMAGE_SIZE = 1024 * 1024;
 // var CMAP_URL = '../../node_modules/pdfjs-dist/cmaps/';
 // var CMAP_PACKED = true;
-
-// pdfjsLib.GlobalWorkerOptions.workerSrc = './pdf.worker.min.js';
-var DEFAULT_URL = window.release_url
+ 
+// pdfjsLib.GlobalWorkerOptions.workerSrc = '/static/pdf.js/pdf.worker.min.js';
+var DEFAULT_URL = window.source_url
 var DEFAULT_SCALE_DELTA = 1.1;
 var MIN_SCALE = 0.25;
 var MAX_SCALE = 10.0;
@@ -66,6 +66,8 @@ var PDFViewerApplication = {
     // Loading document.
     var loadingTask = pdfjsLib.getDocument({
       url: url,
+      disableRange: true,
+      disableStream: true,
       // maxImageSize: MAX_IMAGE_SIZE,
       // cMapUrl: CMAP_URL,
       // cMapPacked: CMAP_PACKED,
@@ -254,8 +256,6 @@ var PDFViewerApplication = {
       l10n: this.l10n,
       useOnlyCssZoom: USE_ONLY_CSS_ZOOM,
       textLayerMode: TEXT_LAYER_MODE,
-      // disableRange: true,
-      // disableStream: true
     });
     this.pdfViewer = pdfViewer;
     linkService.setViewer(pdfViewer);
@@ -289,7 +289,7 @@ var PDFViewerApplication = {
     });
 
     document.getElementById('print').addEventListener('click', function() {
-      var pdfFile = window.open(window.print_url);
+      var pdfFile = window.open(window.source_url);
       pdfFile.print();
     });
 

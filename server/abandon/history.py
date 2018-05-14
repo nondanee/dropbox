@@ -10,8 +10,8 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        uid = 4
-        # return toolbox.javaify(403,"forbidden")
+        # uid = 4
+        return toolbox.javaify(403,"forbidden")
 
     query_parameters = request.rel_url.query
     

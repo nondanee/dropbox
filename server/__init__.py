@@ -37,8 +37,8 @@ def init(loop=None):
     app = web.Application(loop=loop,client_max_size=0)
     app.on_startup.append(create_pool)
 
-    app["working_dir"] = str(working_directory)
-    app["temp_dir"] = str(working_directory/"temp")
+    # app["working_dir"] = str(working_directory)
+    # app["temp_dir"] = str(working_directory/"temp")
     app["session_expire"] = 1296000
 
     # fernet_key = fernet.Fernet.generate_key()
@@ -51,7 +51,6 @@ def init(loop=None):
     abandon.setup_routes(app)
 
     app.add_routes([web.static('/static','./static',show_index=True)])
-
 
     return app
 

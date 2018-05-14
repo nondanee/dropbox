@@ -13,8 +13,8 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        uid = 4
-        # return toolbox.javaify(403,"forbidden")
+        # uid = 4
+        return toolbox.javaify(403,"forbidden")
 
     action = request.match_info["action"]
     filename = request.match_info["filename"]

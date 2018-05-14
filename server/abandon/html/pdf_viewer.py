@@ -27,8 +27,7 @@ limitations under the License.
     <script src="/static/pdf.js/pdf.min.js"></script>
     <script src="/static/pdf.js/pdf_viewer.js"></script>
     <script type="text/javascript">
-      window.release_url = '{release_url}';
-      window.print_url = '{source_url}';
+      window.source_url = '{source_url}';
     </script>
   </head>
 

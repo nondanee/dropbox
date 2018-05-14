@@ -13,8 +13,8 @@ def route(request):
     if 'uid' in session:
         uid = session['uid']
     else:
-        uid = 4
-        # return toolbox.javaify(403,"forbidden")
+        # uid = 4
+        return toolbox.javaify(403,"forbidden")
 
     action = request.match_info["action"]
     filename = request.match_info["filename"]
@@ -32,8 +32,7 @@ def route(request):
     if action == 'pdf':
 
         text = html.pdf_viewer.format(
-            source_url = '/source/{}?source={}'.format(filename,source),
-            release_url = '/release/{}?source={}'.format(filename,release),
+            source_url = '/source/{}?source={}'.format(filename,source)
         )
 
         return aiohttp.web.Response(

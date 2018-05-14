@@ -5012,6 +5012,7 @@ var compatibilityParams = Object.create(null);
   var isAndroid = /Android/.test(userAgent);
   var isIE = /Trident/.test(userAgent);
   var isIOS = /\b(iPad|iPhone|iPod)(?=;)/.test(userAgent);
+
   (function checkFullscreenSupport() {
     if (isIE && window.parent !== window) {
       compatibilityParams.disableFullscreen = true;

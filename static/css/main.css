@@ -1,0 +1,613 @@
+.content{
+	position: absolute;
+	top: 0; right: 0;
+	height: 100%;
+	padding-left: 10px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	width: calc(100% - 240px);
+/*	flex-grow: 1;
+	flex-shrink: 1;*/
+}
+.content>.title-bar{
+	height: 96px;
+	display: flex;
+	flex-shrink: 0;
+}
+
+.content>.title-bar .directory-path{
+	display: flex;
+	height: 32px;
+	margin-top: 40px;
+	margin-left: 30px;
+}
+.content>.title-bar .directory-path > *{
+	margin: auto 0;
+	color: #6f6f6f;
+}
+.content>.title-bar .directory-path .split{
+	width: 24px;
+	height: 24px;
+	cursor: default;
+}
+.content>.title-bar .directory-path .split::after{
+	font-family: "icomoon";
+	content: '\e90a';
+	font-size: 24px;
+}
+.content>.title-bar .directory-path .directory-level{
+	font-size: 20px;
+	height: 32px;
+	line-height: 32px;
+	cursor: pointer;
+}
+.content>.title-bar .directory-path .directory-level:hover{
+	text-decoration: underline;
+}
+.content>.title-bar .directory-path .directory-level.working{
+	color: #252525;
+	cursor: text;
+}
+.content>.title-bar .directory-path .directory-level.working:hover{
+	text-decoration: none;
+}
+
+
+.document-container{
+	display: flex;
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+.document-list{
+	user-select: none;
+	display: flex;
+	flex-direction: column;
+	width: calc(100% - 280px);
+/*	flex-grow: 1;
+	flex-shrink: 1;*/
+}
+
+.document-container .document-list .list-header,
+.document-container .document-list .list-body .document-item{
+	box-sizing: border-box;
+	border-bottom: 1px solid transparent;
+	display: flex;
+	position: relative;
+}
+.document-container .document-list .list-header{
+	height: 40px;
+	flex-shrink: 0;
+}
+.document-container .document-list .list-body .document-item{
+	height: 72px;
+	cursor: pointer;
+}
+
+
+.document-container .list-header .header-content,
+.document-container .list-body .item-content{
+	height: 100%;
+	flex-shrink: 1;
+	flex-grow: 1;
+	display: flex;
+	border-bottom: 1px solid #e8e8e8;
+	position: relative;
+}
+
+
+.list-header .header-content .column button{
+	margin: auto 0;
+	font-size: 12px;
+	height: 17px;
+	line-height: 17px;
+	display: flex;
+	padding: 2px 4px;
+	margin: auto -4px;
+	box-sizing: content-box;
+	color: #797979;
+}
+.list-header .header-content .column button::after{
+	font-family: "icomoon";
+	content: "\e913";
+	font-size: 12px;
+	height: 12px;
+	line-height: 12px;
+	margin: auto 0 auto 3px;
+}
+.list-header .header-content .column button.forward::after{
+	content: "\e911";
+}
+.list-header .header-content .column button.reverse::after{
+	content: "\e912";
+}
+
+.list-header .header-content .column:last-child button::before{
+	font-family: "icomoon";
+	font-size: 23px;
+	width: 21px;
+}
+.list-header .header-content .column:last-child button::before{
+	content: "\e90f";
+}
+.list-header .header-content .column:last-child button.grid::before{
+	content: "\e910";
+}
+
+/*checkbox*/
+.list-header button.select,
+.document-item button.select{
+	margin: auto 5px;
+	width: 20px;
+	height: 20px;
+	color: #c6c6c6;
+	border: 1px solid #c6c6c6;
+	box-sizing: border-box;
+	display: flex;
+	flex-shrink: 0;
+	opacity: 0;
+	font-family: "icomoon";
+	font-size: 18px;
+}
+.document-list.select button.select{
+	opacity: 1;
+}
+.document-list.select .list-header button.select::after{
+	content: "\e90e";
+}
+.document-list.select.all .list-header button.select{
+	color: white;
+	border-color: transparent;
+	background-color: var(--themeColor);
+}
+.document-list.select.all .list-header button.select::after{
+	content: "\e90d";
+}
+.list-body .document-item.selected button.select{
+	color: white;
+	border-color: transparent;
+	background-color: var(--themeColor);
+	opacity: 1;
+}
+
+.list-body .document-item.selected button.select::after{
+	content: "\e90d";
+}
+.list-body .document-item.selected .item-content{
+	background-color: var(--themeColorThinAlpha);
+	border-color: var(--themeColorThinAlpha);
+}
+.list-body .document-item.selected:active .item-content{
+	background-color: var(--themeColorLightAlpha)
+}
+.list-body .document-item.selected button.share{
+	opacity: 1 !important;
+}
+.list-body .document-item.selected button.flex{
+	opacity: 1;
+	border-color: #c6c6c6 !important;
+}
+.list-body .document-item.selected button.flex::after{
+	content: "\e909" !important;
+}
+
+
+
+.list-header .header-content .column,
+.list-body .document-item .column{
+	height: 100%;
+	width: 25%;
+	display: flex;
+	padding-right: 20px;
+	box-sizing: border-box;
+}
+.list-header .header-content .column:first-child,
+.list-body .item-content .column:first-child{
+	width: 50%;
+	padding-left: 1px;
+}
+.list-header .header-content .column:last-child,
+.list-body .document-item .item-content .column:last-child{
+	position: absolute;
+	right: 0;
+	width: initial;
+	z-index: 1;
+}
+.list-header .header-content .column:last-child{
+	padding-right: 12px
+}
+.list-body .item-content .column:last-child{
+	padding-right: 1px;
+}
+
+
+
+.list-body .document-item .item-content .column:last-child button{
+	border: 1px solid #c6c6c6;
+	background-color: white;
+	box-sizing: border-box;
+	height: 32px;
+	margin: auto 0;
+	margin-right: 16px;
+}
+.list-body .document-item .item-content .column:last-child button:hover{
+	color: var(--themeColor) !important;
+	border-color: var(--themeColor) !important;
+}
+.list-body .document-item .item-content .column:last-child button.share{
+	color: #252525;
+	font-size: 14px;
+	padding: 0 16px;
+	opacity: 0
+}
+.list-body .document-item .item-content .column:last-child button.flex{
+	border-color: transparent;
+	color: #6f6f6f;
+	font-family: "icomoon";
+	font-size: 32px;
+	line-height: 30px;
+	padding: 0 1px;
+}
+.list-body .document-item .item-content .column:last-child button.share::after{
+	content: "共享";
+}
+.list-body .document-item .item-content .column:last-child button.flex::after{
+	content: "\e902";
+}
+
+.list-body .document-item:hover .item-content .column:last-child button:last-child{
+	border-color: #c6c6c6;
+}
+.document-list .list-header:hover > button.select,
+.list-body .document-item:hover > button.select,
+.list-body .document-item:hover .item-content .column:last-child button.share{
+	opacity: 1;
+}
+.list-body .document-item:hover .item-content .column:first-child .item-name{
+	color: var(--themeColor);
+}
+.list-body .document-item:active .item-content{
+	background-color: #f3f3f3;
+}
+
+
+
+
+.document-list.multiselect button.select{
+	opacity: 1;
+}
+
+.document-list .list-body{
+	overflow: auto;
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+
+.document-list .list-body::-webkit-scrollbar {
+	display: none;
+}
+
+.list-body .document-item .item-content .column div{
+	height: 20px;
+	line-height: 20px;
+	font-size: 14px;
+	margin: auto 0;
+	color: #252525;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+.list-body .document-item .item-content .column .media-icon{
+	width: 64px;
+	height: 100%;
+	flex-shrink: 0;
+	display: flex;
+}
+.list-body .document-item .item-content .column .media-icon.deleted{
+	filter: grayscale(100%);
+}
+.list-body .document-item .item-content .column .media-icon>*{
+	margin: auto;
+}
+.list-body .document-item .item-content .column .item-name{
+	flex-grow: 1;
+	flex-shrink: 1;
+}
+.list-body .document-item .item-content .column .item-name.edit{
+	display: flex;
+	padding: 4px 6px;
+	border: 1px solid var(--themeColor);
+	border-radius: 4px;
+	background-color: white;
+}
+.list-body .document-item .item-content .column .item-name.edit input{
+	font-size: inherit;
+	flex-grow: 1;
+}
+
+
+
+
+
+
+.operation-panel{
+	width: 280px;
+	padding: 0 40px;
+	box-sizing: border-box;
+	height: 100%;
+	flex-shrink: 0;
+}
+.operation-panel .select-count{
+	font-size: 12px;
+	color: #6f6f6f;
+	height: 40px;
+	line-height: 40px
+}
+.operation-panel button.default{
+	height: 32px;
+	padding: 0 16px;
+	font-size: 14px;
+	color: #fff;
+	background-color: var(--themeColor);
+	width: 100%;
+	margin-bottom: 8px;
+}
+.operation-panel button.default{
+	background-color: var(--themeColorLight);
+}
+.operation-panel button.default{
+	background-color: var(--themeColorDark);
+}
+.operation-panel .permission{
+	padding: 8px 0 16px;
+	color: #444444;
+	font-size: 12px;
+	line-height: 32px;
+	border-bottom: 1px solid #e8e8e8;
+	margin-bottom: 8px;
+	display: none;
+}
+.operation-panel .option .item{
+	padding: 0 7px;
+}
+.operation-panel .option button{
+	height: 32px;
+	font-size: 14px;
+	color: var(--themeColor);	
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	padding-right: 8px;
+	display: none;
+}
+.operation-panel .option button::before{
+	font-family: "icomoon";
+	font-size: 32px;
+}
+.operation-panel .option button:hover::after{
+	opacity: 0.9;
+}
+.operation-panel .option button.upload::before{
+	content: "\e90b";
+}
+.operation-panel .option button.mkdir::before{
+	content: "\e908";
+}
+.operation-panel .option button.show::before{
+	content: "\e907";
+}
+.operation-panel .option button.hide::before{
+	content: "\e91c";
+}
+.operation-panel .option button.download::before{
+	content: "\e906";
+}
+.operation-panel .option button.history::before{
+	content: "\e90c";
+}
+.operation-panel .option button.rename::before{
+	content: "\e904";
+}
+.operation-panel .option button.move::before{
+	content: "\e903";
+}
+.operation-panel .option button.copy::before{
+	content: "\e905";
+}
+.operation-panel .option button.delete::before{
+	content: "\e901";
+}
+.operation-panel .option button.smash::before{
+	content: "\e901";
+}
+.operation-panel .option button.upload::after{
+	content: "上传文件";
+}
+.operation-panel .option button.mkdir::after{
+	content: "新文件夹";
+}
+.operation-panel .option button.show::after{
+	content: "显示已删除的文件";
+}
+.operation-panel .option button.hide::after{
+	content: "隐藏已删除的文件";
+}
+.operation-panel .option button.download::after{
+	content: "下载";
+}
+.operation-panel .option button.history::after{
+	content: "版本历史记录";
+}
+.operation-panel .option button.rename::after{
+	content: "重命名";
+}
+.operation-panel .option button.move::after{
+	content: "移动";
+}
+.operation-panel .option button.copy::after{
+	content: "复制";
+}
+.operation-panel .option button.delete::after{
+	content: "删除";
+}
+.operation-panel .option button.smash::after{
+	content: "永久删除";
+}
+
+
+.operation-panel.mess{
+	display: none;
+}
+.operation-panel.root .mkdir,
+.operation-panel.root .show,
+.operation-panel.root .hide{
+	display: flex;
+}
+.operation-panel.file .permission,
+.operation-panel.file .download,
+.operation-panel.file .history,
+.operation-panel.file .rename,
+.operation-panel.file .copy,
+.operation-panel.file .move,
+.operation-panel.file .delete{
+	display: flex;
+}
+.operation-panel.directory .permission,
+.operation-panel.directory .download,
+.operation-panel.directory .rename,
+.operation-panel.directory .move,
+.operation-panel.directory .delete{
+	display: flex;
+}
+.operation-panel.multiple .move,
+.operation-panel.multiple .copy,
+.operation-panel.multiple .delete{
+	display: flex;
+}
+.operation-panel.delete .smash{
+	display: flex;
+}
+.operation-panel.delete .smash{
+	display: flex;
+}
+.operation-panel.normal .permission,
+.operation-panel.normal .upload,
+.operation-panel.normal .mkdir,
+.operation-panel.normal .show,
+.operation-panel.normal .hide{
+	display: flex;
+}
+
+
+.menu{
+	position: absolute;
+	width: 160px;
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	border-radius: 4px;
+	box-shadow: 0 0 0 1px rgba(111,111,111,0.16), 0 8px 16px rgba(37,37,37,0.08);
+	padding: 8px 0;
+	box-sizing: border-box;
+	outline: 0;
+}
+.menu .rule{
+	height: 1px;
+	background-color: #e8e8e8; 
+	margin: 8px 0;
+}
+.menu .tip{
+	font-size: 12px;
+	height: 32px;
+	line-height: 32px;
+	cursor: default;
+	color: #6f6f6f;
+}
+.menu .item{
+	font-size: 14px;
+	height: 32px;
+	line-height: 32px;
+	cursor: pointer;
+	color: #252525;
+	display: flex;
+}
+.menu .item:hover{
+	background-color: #f8f8f8;
+}
+.menu .item.active{
+	color: var(--themeColor);
+}
+.menu .item.active::before{
+	font-family: "icomoon";
+	content: "\e90d";	
+	text-align: center;
+}
+.menu .item.disable:hover{
+	background-color: initial;
+}
+.menu .item.disable{
+	color: #c6c6c6;
+	cursor: default;
+	pointer-events: none;
+}
+
+
+.document-item .menu{
+	z-index: 2;
+	top: 60px;
+	bottom: initial;
+	right: 9px;
+}
+.document-item .menu.up{
+	top: initial;
+	bottom: 60px;
+}
+.document-item .menu .item{
+	padding: 0 16px;
+}
+
+
+.list-header .menu{
+	z-index: 2;
+	top: 38px;	
+}
+.list-header .menu.one{
+	left: 23px;
+}
+.list-header .menu.two{
+	left: calc(50% + 7px);
+}
+.list-header .menu.three{
+	left: calc(75% - 1px);
+}
+
+
+.list-header .menu .tip,
+.list-header .menu .rule{
+	padding: 0 32px;
+}
+.list-header .item::before{
+	content: "";
+	width: 32px;
+	height: 32px;
+	line-height: 32px;
+}
+.list-header .item.active::before{
+	font-size: 23px;
+	width: 32px;
+	height: 32px;
+}
+
+.operate .menu{
+	z-index: 2;
+	top: 55px;
+	right: 0px;
+}
+.operate  .menu .item{
+	padding: 0 16px;
+}
+.operate .menu .rule{
+	margin-left: 16px;
+}

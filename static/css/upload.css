@@ -1,0 +1,256 @@
+.mask.center .window.upload{
+	width: 640px;
+}
+.mask.center .window.upload .body .task-list{
+	max-height: 230px;
+	overflow: auto;
+	border: 1px solid #e5e5e5;
+	border-radius: 3px;
+}
+.mask.center .window.upload .body .countdown{
+	color: #444444;
+	margin-top: 8px;
+    text-align: right;
+}
+.mask.center .window.upload .body .countdown.hide{
+	display: none;
+}
+.mask.center .window.upload .body .task-list .task-item{
+	height: 40px;
+	box-sizing: content-box;
+	/*border-bottom: 1px solid rgba(0,0,0,0.13);*/
+	border-bottom: 1px solid #e5e5e5;
+	display: flex;
+	position: relative;
+	background-color: white;
+	font-size: 14px;
+}
+.mask.center .window.upload .body .task-list .task-item.success .cursor,
+.mask.center .window.upload .body .task-list .task-item.error .cursor,
+.mask.center .window.upload .body .task-list .task-item.cancel .cursor{
+	opacity: 0
+}
+.mask.center .window.upload .body .task-list .task-item.success{
+	background-color: #ebffd9;
+}
+.mask.center .window.upload .body .task-list .task-item.error{
+	background-color: #fce3e3;
+}
+.mask.center .window.upload .body .task-list .task-item.cancel{
+	background-color: #f8f8f8;
+}
+
+
+.mask.center .window.upload .body .task-list .task-item>*{
+	z-index: 1;
+}
+.mask.center .window.upload .body .task-list .task-item .cursor{
+	background-color: var(--themeColorLightAlpha);
+	position: absolute;
+	top: 0;left: 0;
+	width: 0;height: 100%;
+}
+.mask.center .window.upload .body .task-list .task-item:last-child{
+	border: none;
+}
+.mask.center .window.upload .body .task-list .task-item .item-information{
+	display: flex;
+	width: 365px;
+	align-items: center;
+	margin-right: 10px;	
+}
+.mask.center .window.upload .body .task-list .task-item .task-status{
+	display: flex;
+	flex-grow: 1;
+	align-items: center;
+}
+.mask.center .window.upload .body .task-list .task-item .status-icon{
+	display: flex;
+}
+.mask.center .window.upload .body .task-list .task-item .item-information .media-icon{
+	width: 40px;
+	height: 40px;
+	display: flex;
+	flex-shrink: 0;
+}
+.mask.center .window.upload .body .task-list .task-item .item-information .media-icon>*{
+	margin: auto;
+}
+.mask.center .window.upload .body .task-list .task-item .item-information .item-name{
+	color: #444444;
+	flex-grow: 1;
+	flex-shrink: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 270px;
+}
+.mask.center .window.upload .body .task-list .task-item .item-information .item-size{
+	color: #888;
+	flex-shrink: 0;
+}
+.mask.center .window.upload .body .task-list .task-item .task-status .item-directory{
+	color: var(--themeColorLight);
+	cursor: pointer;
+}
+.mask.center .window.upload .body .task-list .task-item .task-status .item-directory:hover{
+	text-decoration: underline;
+}
+.mask.center .window.upload .body .task-list .task-item .task-status .message{
+	color: #444444;
+}
+.mask.center .window.upload .body .task-list .task-item .task-status .message.error{
+	color: #992826;
+}
+
+.mask.center .window.upload .body .task-list .task-item .action{
+	font-family: 'icomoon';
+	width: 32px;
+	color: #868686;
+	font-size: 18px;
+}
+.mask.center .window.upload .body .task-list .task-item .action::after{
+	content: '\e915';
+}
+.mask.center .window.upload .body .task-list .task-item .action:focus{
+	box-shadow: none;
+}
+.mask.center .window.upload .body .task-list .task-item.success .action,
+.mask.center .window.upload .body .task-list .task-item.error .action,
+.mask.center .window.upload .body .task-list .task-item.cancel .action{
+	font-size: 15px;
+	pointer-events: none;
+}
+.mask.center .window.upload .body .task-list .task-item.success .action{
+	color: #92db92;
+}
+.mask.center .window.upload .body .task-list .task-item.success .action::after{
+	content: '\e919';
+}
+.mask.center .window.upload .body .task-list .task-item.error .action{
+	color: #e4aaaa;
+}
+.mask.center .window.upload .body .task-list .task-item.error .action::after{
+	content: '\e918';
+}
+.mask.center .window.upload .body .task-list .task-item.cancel .action{
+	color: #d4d4d4;
+}
+.mask.center .window.upload .body .task-list .task-item.cancel .action::after{
+	content: '\e917';
+}
+
+
+
+.upload-indicator{
+	position: absolute;
+	bottom: 24px; 
+	left: 0;right: 0;margin: auto;
+	box-sizing: border-box;
+    height: 44px;
+    padding-left: 8px;
+    padding-right: 24px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px rgba(111,111,111,0.16), 0 8px 16px rgba(37,37,37,0.08);
+    animation: float-up 0.15s cubic-bezier(0.2, 0, 0.5, 1.7);
+    width: 600px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+@keyframes float-up {
+	0% {
+		transform: translateY(28px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+.upload-indicator .progress{
+	position: absolute;
+	bottom: 0; left: 0;
+	background-color: var(--themeColorLightAlpha);
+	height: 4px;
+	width: 100%;
+	display: flex;
+	opacity: 0;
+}
+.upload-indicator .progress .cursor{
+	width: 0%;
+	transition: width linear 400ms;
+	background-color: var(--themeColor);
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+.upload-indicator .icon{
+	height: 18px;
+	width: 18px;
+	line-height: 18px;
+	border-radius: 50%;
+	overflow: hidden;
+	color: white;
+	margin: 7px;
+	font-family: 'icomoon';
+	text-align: center;
+	flex-shrink: 0;
+}
+.upload-indicator .message{
+	font-size: 14px;
+	color: #252525;
+	margin-left: 4px;
+	flex-grow: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.upload-indicator button{
+	margin-left: 16px;
+	height: 100%;
+	font-size: 14px;
+	color: #6f6f6f;
+	flex-shrink: 0;
+}
+.upload-indicator button:hover{
+	color: var(--themeColor);
+}
+.upload-indicator button:focus{
+	box-shadow: none;
+}
+.upload-indicator.run .progress{
+	opacity: 1;
+}
+.upload-indicator.run .close{
+	display: none;
+}
+.upload-indicator.error .icon{
+	font-size: 14px;
+	background-color: #DB2E16;
+}
+.upload-indicator.success .icon{
+	font-size: 16px;
+	background-color: #3DCC5E;
+}
+.upload-indicator.run .icon{
+	font-size: 16px;
+	background-color: var(--themeColor);
+	animation: rotate 3s linear infinite;
+}
+.upload-indicator.run .icon::after{
+	content: '\e91a'
+}
+.upload-indicator.error .icon::after{
+	content: '\e915'
+}
+.upload-indicator.success .icon::after{
+	content: '\e91b'
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

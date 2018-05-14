@@ -1,0 +1,104 @@
+.nav{
+	position: absolute;
+	top: 0; left: 0;
+	width: 240px;
+	height: 100%;
+	background-color: #f9f9f9;
+	box-sizing: border-box;
+	padding-left: 40px;
+	flex-shrink: 0;
+}
+.nav .logo{
+    margin: 40px 0 34px;
+	width: 32px;
+	height: 32px;
+	cursor: pointer;
+}
+.nav .logo::after{
+	content: "\e900";
+	font-family: "icomoon";
+	font-size: 32px;
+	color: var(--themeColor);
+}
+.nav .title{
+	color: var(--themeColor);
+	font-size: 16px;
+	cursor: pointer;
+}
+.nav .option{
+	margin-top: 33px;
+}
+.nav .option .item{
+	display: flex;
+}
+.nav .option .item button{
+	font-size: 14px;
+	height: 32px;
+	color: #8e8e8e;
+	margin: auto 0;
+	cursor: pointer;
+}
+.nav .logo:hover,
+.nav .title:hover,
+.nav .option .item button:hover{
+	opacity: 0.8;
+}
+.nav .option button.focus{
+	color: var(--themeColor);
+}
+.nav .option button:focus{
+	box-shadow: none;
+}
+
+.nav .tab{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 80px;
+	width: 100%;
+	padding: 0 20px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	cursor: pointer;
+}
+.nav .tab::before{
+	content: "";
+	position: absolute;
+	top: 0;
+	width: calc(100% - 40px);
+	height: 1px;
+	background-color: #e8e8e8;
+	margin: auto;
+}
+.nav .tab:hover{
+	background-color: #e8e8e8;
+}
+.nav .tab:hover .switch{
+	color: #6f6f6f;
+}
+.nav .tab .type{
+	font-size: 14px;
+	margin-bottom: 6px;
+	color: #252525;
+}
+.nav .tab .member{
+	font-size: 12px;
+	color: #6f6f6f;
+}
+.nav .tab .switch{
+	font-size: 24px;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	position: absolute;
+	right: 20px;
+	top: 0;bottom: 0;
+	margin: auto;
+	color: #c6c6c6;
+}
+.nav .tab .switch::after{
+	font-family: "icomoon";
+	content: "\e914";
+}

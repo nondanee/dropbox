@@ -1,4 +1,4 @@
-from . import index, signin, signup
+from . import index, home, signin, signup
 from . import upload, ls, mkdir, rename, status, tree, recycle, preview, history
 from . import remove_smash_recover, move_copy
 from . import source, compress, frame
@@ -7,15 +7,16 @@ from . import test
 def setup_routes(app):
 
     app.router.add_route("GET", "/", index.route)
-    app.router.add_route("OPTIONS", "/test", test.route)
-    app.router.add_route("POST", "/test", test.route)
-
+    app.router.add_route("GET", "/home", home.route)
+    
     app.router.add_route("POST", "/signin", signin.route)
     app.router.add_route("POST", "/signup", signup.route)
 
+    # app.router.add_route("OPTIONS", "/test", test.route)
+    # app.router.add_route("POST", "/test", test.route)
     app.router.add_route("POST", "/upload", upload.route)
     app.router.add_route("OPTIONS", "/upload", upload.route)
-    app.router.add_route("GET", "/list", ls.route) #referer
+    app.router.add_route("GET", "/list", ls.route)
     app.router.add_route("GET", "/tree", tree.route)
     app.router.add_route("GET", "/recycle", recycle.route)
     app.router.add_route("POST", "/status", status.route)

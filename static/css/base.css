@@ -50,6 +50,8 @@ input{
 	--themeColorDark: rgb(123,80,155);
 	--themeColorLight: rgb(150,110,179);/*#966eb3*/
 	--themeColorLightAlpha: rgba(150,110,179,0.3);
+	--themeColorThin: rgb(188,161,207);
+	--themeColorThinAlpha: rgba(188,161,207,0.3);
 }
 
 
