@@ -199,7 +199,7 @@ function signInMode(){
 		request('POST',`${apiHost}/signin`,data)
 		.then(function(jsonBack){
 			if(jsonBack['code'] == 200){
-				//
+				window.location.href = '/home#/'
 			}
 			else{
 				email.classList.add('error')

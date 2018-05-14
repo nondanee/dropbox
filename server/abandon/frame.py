@@ -43,7 +43,7 @@ def route(request):
 
     if action == 'office':
 
-        release_url = '{}release/{}?source={}'.format(os.environ["HEROKU_URL"].filename,release)
+        release_url = '{}release/{}?source={}'.format(os.environ["HEROKU_URL"],filename,release)
         target_url = 'https://view.officeapps.live.com/op/view.aspx?src={}'.format(urllib.parse.quote_plus(release_url))
 
         session = aiohttp.ClientSession(headers={"Accept-Encoding": "identity"})
