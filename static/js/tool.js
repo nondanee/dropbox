@@ -1,4 +1,4 @@
-const apiHost = 'http://192.168.83.133:8080'
+const apiHost = ''
 
 function timeReadable(date){
 	date = new Date(date)
