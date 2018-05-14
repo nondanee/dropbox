@@ -192,7 +192,7 @@ function Viewer(){
 			itemContent.appendChild(pdfIframe)
 		}
 
-		else if(item.type.indexOf('officedocument')!=-1){
+		else if(item.type.indexOf('officedocument')!=-1||item.type.indexOf('vnd.ms-')!=-1||item.type.indexOf('msword')!=-1){
 			let pdfIframe = createElement('iframe')
 			pdfIframe.classList.add('office')
 			pdfIframe.src = `${apiHost}/office/${item.name}?source=${item.source}`
