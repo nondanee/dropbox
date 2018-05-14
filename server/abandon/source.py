@@ -10,11 +10,8 @@ def route(request):
     # request.headers["Referer"]
 
     session = yield from get_session(request)
-    if 'uid' in session:
-        uid = session['uid']
-    else:
-        # uid = 4
-        return toolbox.javaify(403,"forbidden")
+    
+    uid = session['uid'] if 'uid' in session else ''
 
     action = request.match_info["action"]
     filename = request.match_info["filename"]
