@@ -449,7 +449,7 @@ function Container(){
 
 		itemContent.onclick = function(event){
 			event.stopPropagation()
-			if(item.selected == true)
+			if(documentList.classList.contains('select') == true)
 				selectButton.click()
 			else
 				defaultAction()
@@ -462,7 +462,7 @@ function Container(){
 
 		flexButton.onclick = function(event){
 			event.stopPropagation()
-			if(item.selected == true){
+			if(documentList.classList.contains('select') == true){
 				defaultAction()
 				return
 			}

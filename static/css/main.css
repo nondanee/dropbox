@@ -184,10 +184,16 @@
 	opacity: 1 !important;
 }
 .list-body .document-item.selected button.flex{
-	opacity: 1;
+	opacity: 1 !important;
 	border-color: #c6c6c6 !important;
 }
-.list-body .document-item.selected button.flex::after{
+.document-list.select .list-body .document-item button.flex{
+	opacity: 0;
+}
+.document-list.select .list-body .document-item:hover button.flex{
+	opacity: 1;
+}
+.document-list.select .list-body .document-item button.flex::after{
 	content: "\e909" !important;
 }
 
