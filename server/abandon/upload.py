@@ -68,25 +68,30 @@ def route(request):
             connect.close()
             return toolbox.javaify(400,"directory exists")
 
-        session = ClientSession()
-        boundary = '----------{}'.format(uuid.uuid4().hex)
-        content_type = 'multipart/form-data; boundary={}'.format(boundary)
-        try:
-            response = yield from session.post('http://up-z2.qiniu.com',data=rewrite(uid,part,boundary),headers={'Content-Type':content_type})
-            json_back = yield from response.text()
-            json_back = json.loads(json_back)
-            file_type = json_back["type"]
-            size = json_back["size"]
-            md5 = json_back["key"].split("/")[-1]
-        except Exception as error:
-            print(error)
-            yield from session.close()
-            yield from cursor.close()
-            connect.close()
-            return toolbox.javaify(500,"something wrong")
-        else:
-            yield from session.close()
+        yield from cursor.close()
+        connect.close()
 
+
+    session = ClientSession()
+    boundary = '----------{}'.format(uuid.uuid4().hex)
+    content_type = 'multipart/form-data; boundary={}'.format(boundary)
+    try:
+        response = yield from session.post('http://up-z2.qiniu.com',data=rewrite(uid,part,boundary),headers={'Content-Type':content_type})
+        json_back = yield from response.text()
+        json_back = json.loads(json_back)
+        file_type = json_back["type"]
+        size = json_back["size"]
+        md5 = json_back["key"].split("/")[-1]
+    except Exception as error:
+        print(error)
+        yield from session.close()
+        return toolbox.javaify(500,"something wrong")
+    else:
+        yield from session.close()
+
+
+    with (yield from request.app['pool']) as connect:
+        cursor = yield from connect.cursor()
 
         if file_check and file_check["type"] == "directory" and file_check["status"] == 0:
             yield from fs.directory_delete(cursor,uid,os.path.join(directory,file_name))
