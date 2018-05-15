@@ -922,7 +922,7 @@ function Container(){
 			let itemsExtend = []
 			if(items.length == 1){ // is one directory
 				titleContent = items[0]['name']
-				headerText = `${directory}/${items[0]['name']}`
+				headerText = (directory == '/') ? items[0]['name'] : `${directory}/${items[0]['name']}`
 			}
 			else{
 				titleContent = `恢复 ${items.length} 个项目…`
