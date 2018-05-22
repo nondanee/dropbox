@@ -126,6 +126,10 @@ function illegalName(name){
 }
 
 function request(method,url,data){
+	let form = []
+	for (let key in data)
+		form.push(`${key}=${encodeURIComponent(data[key])}`)
+	form = form.join('&')
 	return new Promise(function (resolve, reject){
 		let xhr = new XMLHttpRequest()
 		xhr.onreadystatechange = function(){
@@ -142,7 +146,7 @@ function request(method,url,data){
 		xhr.open(method,url)
 		if(method.toLocaleUpperCase() == 'POST'){
 			xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
-			xhr.send(data)
+			xhr.send(form)
 		}
 		else{
 			xhr.send()

@@ -65,7 +65,9 @@ def route(request):
 
     # https://gist.github.com/jbn/fc90e3ddbc5c60c698d07b3df30004c8
 
-    session = aiohttp.ClientSession(headers={"Accept-Encoding": "identity"})
+    headers = {'Accept-Encoding': 'identity'}
+    if 'Range' in request.headers: headers['Range'] = request.headers['Range']
+    session = aiohttp.ClientSession(headers = headers)
 
     response = yield from session.get(target_url)
     headers = dict(response.headers)

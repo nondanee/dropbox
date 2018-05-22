@@ -40,12 +40,16 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	max-width: 80%;
 }
 
 .preview-window>.title-bar>.item-information>.item-name{
 	font-size: 14px;
 	color: #252525;
 	margin-top: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .preview-window>.title-bar>.item-information>.item-modify{
@@ -71,6 +75,7 @@
 .preview-window>.title-bar>.operate{
 	position: relative;
 	display: flex;
+	flex-shrink: 0;
 	/*margin-right: 63px;*/
 }
 

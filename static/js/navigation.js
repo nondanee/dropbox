@@ -89,24 +89,28 @@ window.onbeforeunload = function(event){
 function router(){
 	siderbar.syncOption()
 	if(window.location.hash.indexOf('#preview')==0){
+		if(version.opened())
+ 			version.close()
  		viewer.load()
- 	}
- 	else if(window.location.hash.indexOf('#recycle')==0){
- 		recycle.load()
  	}
  	else if(window.location.hash.indexOf('#history')==0){
  		if(viewer.opened())
  			viewer.close()
 		version.load()
  	}
+ 	else if(window.location.hash.indexOf('#recycle')==0){
+ 		recycle.load()
+ 	}
  	else{
- 		if(viewer.opened())
+ 		if(viewer.opened()){
  			viewer.close()
- 		if(recycle.opened())
- 			recycle.close()
- 		else if(version.opened())
+ 		}
+ 		else if(version.opened()){
  			version.close()
+ 		}
  		else{
+ 			if(recycle.opened())
+ 				recycle.close()
  			container.load()
  		}
  	}

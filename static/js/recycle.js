@@ -1,5 +1,5 @@
 function Recycle(){
-	let path
+	let directory
 	let all
 	let contentRecycle
 	let listBody
@@ -8,14 +8,14 @@ function Recycle(){
 	let open = false
 
 	function parse(){
-		path = decodeURIComponent(window.location.hash).split('recycle=').pop()
-		if(!path||path=='#recycle'||path=='/'){
-			path = '/'
+		directory = decodeURIComponent(window.location.hash).split('recycle=').pop()
+		if(!directory||directory=='#recycle'||directory=='/'){
+			directory = '/'
 			selectorButton.innerHTML = '任何文件夹'
 			resetButton.classList.add('hide')
 		}
 		else{
-			selectorButton.innerHTML = path.split('/').pop()
+			selectorButton.innerHTML = directory.split('/').pop()
 			resetButton.classList.remove('hide')
 		}
 	}
@@ -111,7 +111,7 @@ function Recycle(){
 			open = true
 		}
 		parse()
-		request('GET',`${apiHost}/recycle?path=${path}`)
+		request('GET',`${apiHost}/recycle?dir=${encodeURIComponent(directory)}`)
 		.then(function(jsonBack){
 			if(jsonBack['code']==200){
 				all = jsonBack['data']
@@ -213,7 +213,7 @@ function Recycle(){
 			titleContent = item['name']
 			headerText = `您在 ${timeReadable(item['modify'])} 删除`
 
-			request('POST',`${apiHost}/status`,`dir=${item['directory']}&name=${item['name']}`)
+			request('POST',`${apiHost}/status`,{'dir':item['directory'],'name':item['name']})
 			.then(function(jsonBack){
 				if(jsonBack['code'] == 200){
 					innerItems = jsonBack['data']
@@ -262,15 +262,15 @@ function Recycle(){
 		}
 		
 		function confirm(action){
-			request('POST',`${apiHost}/${action}`,`dir=${item['directory']}&name=${item['name']}`)
+			request('POST',`${apiHost}/${action}`,{'dir':item['directory'],'name':item['name']})
 			.then(function(jsonBack){
 				if(jsonBack['code'] == 200){
 					all.splice(all.indexOf(item),1)
 					list()
 					notify(((action == 'recover') ? '已成功恢复文件。':'已完成永久删除文件。'),'success')
-					if(item.directory == container.getCwd()){
-						container.load()
-					}
+					// if(item.directory == container.getCwd()){
+					// 	container.load()
+					// }
 				}
 				else{
 					notify(errorReadable(jsonBack['message']),'error')

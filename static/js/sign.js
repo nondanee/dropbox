@@ -89,7 +89,7 @@ function signUpMode(){
 			checkboxError.innerHTML = '请同意服务条款'
 			return
 		}
-		let data = `email=${emailValue}&password=${passwordValue}&name=${lastNameValue} ${fisrtNameValue}`
+		let data = {'email': emailValue,'password': passwordValue,'name': `${lastNameValue} ${fisrtNameValue}`}
 		request('POST',`${apiHost}/signup`,data)
 		.then(function(jsonBack){
 			if(jsonBack['code'] == 200){
@@ -195,7 +195,7 @@ function signInMode(){
 			passwordError.innerHTML = '请输入密码'
 			return
 		}
-		let data = `email=${emailValue}&password=${passwordValue}&remember=${remember}`
+		let data = {'email': emailValue,'password': passwordValue,'remember': remember}
 		request('POST',`${apiHost}/signin`,data)
 		.then(function(jsonBack){
 			if(jsonBack['code'] == 200){

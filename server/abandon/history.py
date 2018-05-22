@@ -31,8 +31,7 @@ def route(request):
         ''',(uid,directory,name))
 
         check = yield from cursor.fetchone()
-        operator = check[4]
-
+        
         if not check or check[1] == 'directory':
             yield from cursor.close()
             connect.close()
@@ -52,6 +51,7 @@ def route(request):
         type_previous = check[1]
         size_previous = check[2]
         md5_previous = check[3]
+        operator = check[4]
 
         for line in result:
 

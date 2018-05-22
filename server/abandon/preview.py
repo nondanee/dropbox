@@ -31,16 +31,17 @@ def route(request):
         ''',(uid,directory,name))
 
         current = yield from cursor.fetchone()
-        mime = current[1]
-        modify = current[2]
-        size = current[3]
-        md5 = current[4]
-        history = []
 
         if not current or current[0] == 'directory':
             yield from cursor.close()
             connect.close()
             return toolbox.javaify(400,"bad request")
+
+        mime = current[1]
+        modify = current[2]
+        size = current[3]
+        md5 = current[4]
+        history = []
 
         if version:
             yield from cursor.execute('''

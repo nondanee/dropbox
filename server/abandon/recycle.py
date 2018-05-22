@@ -15,12 +15,12 @@ def route(request):
 
     query_parameters = request.rel_url.query
 
-    path = query_parameters["path"] if "path" in query_parameters else '/'
+    directory = query_parameters["dir"] if "dir" in query_parameters else '/'
 
     with (yield from request.app['pool']) as connect:
         cursor = yield from connect.cursor()
 
-        if path == '/':
+        if directory == '/':
             yield from cursor.execute('''
                 SELECT directory, name, modify FROM garage WHERE uid = %s AND type = 'directory' AND status = 0
             ''',(uid,))
@@ -29,13 +29,13 @@ def route(request):
                 SELECT directory, name, modify 
                 FROM (SELECT directory, name, modify FROM garage WHERE uid = %s AND type = 'directory' AND status = 0) private
                 WHERE directory = %s OR directory LIKE %s
-            ''',(uid,path,'{}/%'.format(path)))
+            ''',(uid,directory,'{}/%'.format(directory)))
         
         directories = yield from cursor.fetchall()
 
-        contain_check = {os.path.join(directory[0],directory[1]):'' for directory in directories}
+        contain_check = {os.path.join(item[0],item[1]):'' for item in directories}
 
-        directories = [directory for directory in directories if directory[0] not in contain_check]
+        directories = [item for item in directories if item[0] not in contain_check]
 
         param = [os.path.join(line[0],line[1]) for line in directories]
 
@@ -43,7 +43,7 @@ def route(request):
 
         if param:
 
-            if path == '/':
+            if directory == '/':
                 yield from cursor.execute('''
                     SELECT directory, name, type, modify, size FROM garage 
                     WHERE uid = %%s AND type != 'directory' AND status = 0 AND directory NOT IN (%s)
@@ -54,11 +54,11 @@ def route(request):
                     SELECT directory, name, type, modify, size
                     FROM (SELECT directory, name, type, modify, size FROM garage WHERE uid = %%s AND type != 'directory' AND status = 0 AND directory NOT IN (%s)) private
                     WHERE directory = %%s OR directory LIKE %%s
-                '''%(', '.join(['%s'] * (len(param)))),tuple([uid,]+param+[path,'{}/%'.format(path)]))
+                '''%(', '.join(['%s'] * (len(param)))),tuple([uid,]+param+[directory,'{}/%'.format(directory)]))
 
         else:
 
-            if path == '/':
+            if directory == '/':
                 yield from cursor.execute('''
                     SELECT directory, name, type, modify, size FROM garage 
                     WHERE uid = %s AND status = 0
@@ -69,7 +69,7 @@ def route(request):
                     SELECT directory, name, type, modify, size
                     FROM (SELECT directory, name, type, modify, size FROM garage WHERE uid = %s AND status = 0) private
                     WHERE directory = %s OR directory LIKE %s
-                ''',(uid,path,'{}/%'.format(path)))
+                ''',(uid,directory,'{}/%'.format(directory)))
 
         
         files = yield from cursor.fetchall()

@@ -66,8 +66,8 @@ var PDFViewerApplication = {
     // Loading document.
     var loadingTask = pdfjsLib.getDocument({
       url: url,
-      disableRange: true,
-      disableStream: true,
+      // disableRange: true,
+      // disableStream: true,
       // maxImageSize: MAX_IMAGE_SIZE,
       // cMapUrl: CMAP_URL,
       // cMapPacked: CMAP_PACKED,

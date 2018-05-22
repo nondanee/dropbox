@@ -319,7 +319,7 @@ function Container(){
 	function load(){
 		locate()
 		order = (order == -1) ? 0 : order
-		request('GET',`${apiHost}/list?dir=${workingDirectory}`)
+		request('GET',`${apiHost}/list?dir=${encodeURIComponent(workingDirectory)}`)
 		.then(function(jsonBack){
 			all = jsonBack['data']
 			care = (jsonBack['message'] == 'care') ? true : false
@@ -692,7 +692,7 @@ function Container(){
 				documentItem.parentNode.removeChild(documentItem)
 			}
 			else{
-				request('POST',`${apiHost}/makedir`,`dir=${workingDirectory}&name=${name}`)
+				request('POST',`${apiHost}/makedir`,{'dir': workingDirectory,'name': name})
 				.then(function(jsonBack){
 					if(jsonBack['code'] == 200){
 						all[0] = jsonBack['data']
@@ -725,7 +725,7 @@ function Container(){
 		}
 
 		else{
-			request('POST',`${apiHost}/compress`,`dir=${workingDirectory}&name=${name}`)
+			request('POST',`${apiHost}/compress`,{'dir': workingDirectory,'name': name})
 			.then(function(jsonBack){
 				if(jsonBack['code']==200){
 					let zipArchive = ''
@@ -777,7 +777,7 @@ function Container(){
 				itemName.innerHTML = nameChange
 			}
 			else{
-				request('POST',`${apiHost}/rename`,`dir=${workingDirectory}&name=${item['name']}&rename=${nameChange}`)
+				request('POST',`${apiHost}/rename`,{'dir': workingDirectory,'name': item['name'],'rename': nameChange})
 				.then(function(jsonBack){
 					if(jsonBack['code'] == 200){
 						item['name'] = jsonBack['data']['name']
@@ -823,7 +823,7 @@ function Container(){
 		}
 
 		function confirm(){
-			request('POST',`${apiHost}/smash`,`dir=${workingDirectory}&name=${name}`)
+			request('POST',`${apiHost}/smash`,{'dir': workingDirectory,'name': name})
 			.then(function(jsonBack){
 				if(jsonBack['code'] == 200){
 					items.forEach(function(item){
@@ -869,7 +869,7 @@ function Container(){
 		}
 
 		function confirm(){
-			request('POST',`${apiHost}/remove`,`dir=${workingDirectory}&name=${name}`)
+			request('POST',`${apiHost}/remove`,{'dir': workingDirectory,'name': name})
 			.then(function(jsonBack){
 				if(jsonBack['code'] == 200){
 					items.forEach(function(item){
@@ -929,7 +929,7 @@ function Container(){
 				headerText = directoryName
 				itemsExtend = itemsExtend.concat(items)
 			}
-			request('POST',`${apiHost}/status`,`dir=${directory}&name=${name}`)
+			request('POST',`${apiHost}/status`,{'dir': directory,'name': name})
 			.then(function(jsonBack){
 				if(jsonBack['code'] == 200){
 					itemsExtend = itemsExtend.concat(jsonBack['data'])
@@ -946,7 +946,7 @@ function Container(){
 		
 
 		function confirm(){
-			request('POST',`${apiHost}/recover`,`dir=${directory}&name=${name}`)
+			request('POST',`${apiHost}/recover`,{'dir': directory,'name': name})
 			.then(function(jsonBack){
 				if(jsonBack['code'] == 200){
 					items.forEach(function(item){
@@ -957,6 +957,7 @@ function Container(){
 						load()
 					else
 						list()
+					// 已恢复“”。
 				}
 				else{
 					notify(errorReadable(jsonBack['message']),'error')
@@ -1032,7 +1033,7 @@ function Container(){
 				notify('文件已在相应文件夹中。','error')
 				return
 			}
-			request('POST',`${apiHost}/${apiPath}`,`src=${workingDirectory}&dst=${selectedDirectory}&name=${name}`)
+			request('POST',`${apiHost}/${apiPath}`,{'src': workingDirectory,'dst': selectedDirectory,'name': name})
 			.then(function(jsonBack){
 				if(jsonBack['code'] == 200){
 					if(action == 'move'){

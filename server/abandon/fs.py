@@ -151,6 +151,13 @@ def directory_mark(cursor,uid,path,status):
 @asyncio.coroutine
 def path_recover(cursor,uid,path):
 
+    # if path == '' or path[0] != '/':
+    #     return False
+
+    # split = [os.path.split(path)]
+    # while split[-1][0] != '/':
+    #     split.append(os.path.split(split[-1][0]))
+
     param = []
 
     while True:

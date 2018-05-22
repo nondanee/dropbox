@@ -25,7 +25,8 @@ function Version(){
 		contentHistory.appendChild(titleBar)
 		let documentContainer = createElement('div','document-container')
 		let containerTip = createElement('div','container-tip')
-		containerTip.innerHTML = '您可以恢复下面的任何版本，使其成为最新文件。 不过系统仍然会保存所有其他版本。'
+		// containerTip.innerHTML = '您可以恢复下面的任何版本，使其成为最新文件。 不过系统仍然会保存所有其他版本。'
+		containerTip.innerHTML = '您可以查看和下载下面任何版本的文件，不会影响当前保存的最新版本。'
 		documentContainer.appendChild(containerTip)
 		documentList = createElement('div','document-list')
 		documentContainer.appendChild(documentList)
@@ -124,7 +125,7 @@ function Version(){
 			open = true
 		}
 		parse()
-		request('GET',`${apiHost}/history?path=${path}`)
+		request('GET',`${apiHost}/history?path=${encodeURIComponent(path)}`)
 		.then(function(jsonBack){
 			if(jsonBack['code']==200){
 				all = jsonBack['data']

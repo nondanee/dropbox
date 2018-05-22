@@ -20,7 +20,7 @@ function Viewer(){
 	this.load = load
 	
 	function query(){
-		request('GET',`${apiHost}/preview?path=${path}&version=${mark}`)
+		request('GET',`${apiHost}/preview?path=${encodeURIComponent(path)}&version=${mark}`)
 		.then(function(jsonBack){
 			if(jsonBack['code']==200){
 				item = jsonBack['data']

@@ -93,7 +93,14 @@ def route(request):
     with (yield from request.app['pool']) as connect:
         cursor = yield from connect.cursor()
 
-        if file_check and file_check["type"] == "directory" and file_check["status"] == 0:
+        file_check = yield from fs.file_exists(cursor,uid,os.path.join(directory,file_name))
+
+        if file_check and file_check["type"] == "directory" and file_check["status"] == 1:
+            yield from cursor.close()
+            connect.close()
+            return toolbox.javaify(400,"directory exists")
+        
+        elif file_check and file_check["type"] == "directory" and file_check["status"] == 0:
             yield from fs.directory_delete(cursor,uid,os.path.join(directory,file_name))
 
         if not file_check:
