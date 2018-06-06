@@ -8,5 +8,23 @@
   "scripts": {
     "postdeploy": "python init.py"
   },
+  "env": {
+    "QINIU_DOMAIN": {
+      "description": "qiniu's bucket domain",
+      "value": ""
+    },
+    "QINIU_BUCKET": {
+      "description": "qiniu's bucket name",
+      "value": ""
+    },
+    "QINIU_ACCESS": {
+      "description": "qiniu's access key",
+      "value": ""
+    },
+    "QINIU_SECRET": {
+      "description": "qiniu's secret key",
+      "value": ""
+    }
+  },
   "success_url": "/"
 }
