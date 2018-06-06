@@ -1,6 +1,6 @@
 {
   "name": "homemade dropbox",
-  "description": "A office subsystem for document management based on PaaS environment",
+  "description": "An office subsystem for document management based on PaaS environment",
   "keywords": ["oss","paas","document management","dropbox"],
   "website": "https://github.com/nondanee/dropbox",
   "repository": "https://github.com/nondanee/dropbox",

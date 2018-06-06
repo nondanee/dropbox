@@ -1,6 +1,5 @@
 import asyncio
 import datetime, time, json, os, re
-# import pytz
 from aiohttp import web
 
 def time_str(time_set):
@@ -9,8 +8,6 @@ def time_str(time_set):
 def time_utc(time_set):
     utc_time = time_set + datetime.timedelta(seconds=time.timezone)
     return utc_time.strftime("%Y-%m-%dT%H:%M:%SZ")
-    # cn_time = pytz.timezone('Asia/Shanghai').localize(time_set)
-    # return cn_time.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 def time_stamp(time_set):
     return int(time.mktime(time_set.timetuple()))

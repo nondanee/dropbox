@@ -63,6 +63,9 @@ function Version(){
 		button.innerHTML = '查看'
 		columnThree.appendChild(itemSize)
 		columnThree.appendChild(button)
+		// itemContent.onclick = function(){
+		// 	window.location.hash = `preview=${path}&mark=${item.mark}`
+		// }
 		
 		if(item.action == 'create'){
 			upperLineTwo.innerHTML = `由${item.operator}添加。`
@@ -90,9 +93,7 @@ function Version(){
 			itemContent.appendChild(columnOne)
 			itemContent.appendChild(columnThree)
 		}
-		// itemContent.onclick = function(){
-		// 	window.location.hash = `preview=${path}&mark=${item.mark}`
-		// }
+		
 		return itemContent
 	}
 

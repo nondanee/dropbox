@@ -9,5 +9,6 @@ ADD /server /app/server
 ADD /static /app/static
 WORKDIR /app
 
+ENV PORT=5000
 EXPOSE  5000
 CMD ["bash","start"]
