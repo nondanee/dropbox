@@ -148,6 +148,7 @@
 
 
 .upload-indicator{
+	z-index: 5;
 	position: absolute;
 	bottom: 24px; 
 	left: 0;right: 0;margin: auto;

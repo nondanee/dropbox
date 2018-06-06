@@ -33,7 +33,6 @@ function Uploader(){
 		item.button.onclick = function(){
 			item.status = -1
 			syncUI()
-			refreshList()
 			goon()
 		}
 	}
@@ -241,7 +240,6 @@ function Uploader(){
 			xhr.abort()
 			// syncUI()
 			// refreshList()
-			// goon()
 		})
 		refreshList()
 		xhr.onreadystatechange = function(){
@@ -249,18 +247,15 @@ function Uploader(){
 				if(xhr.status == 200){
 					let jsonBack = JSON.parse(xhr.responseText)
 					item.status = jsonBack['code']
-					syncUI()
-					refreshList()
 					if(jsonBack['code']==200&&item.directory==container.getCwd()){
 						container.add(jsonBack['data'])
 					}
 				}
 				else{
 					if(xhr.status > 0)
-						item.status = xhr.status
-					syncUI()
-					refreshList()
+						item.status = xhr.status					
 				}
+				syncUI()
 				goon()
 			}
 		}
