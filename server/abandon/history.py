@@ -76,11 +76,11 @@ def route(request):
                 item['name'] = name_previous
                 item['rename'] = line[4]
 
-            elif action in [3,4,5,6]:
+            if action in [3,4,5,6]:
                 item['from'] = line[3].split('|')[0]
                 item['to'] =  line[4].split('|')[0]
 
-            elif action in [5,6]:
+            if action in [5,6]:
                 name_previous = line[3].split('|')[1]
                 item['name'] = name_previous
                 item['rename'] = line[4].split('|')[1]

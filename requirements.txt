@@ -7,7 +7,6 @@ attrs==17.4.0
 cffi==1.11.5
 chardet==3.0.4
 cryptography==2.2.2
-filetype==1.0.1
 gunicorn==19.8.1
 idna==2.6
 idna-ssl==1.0.1

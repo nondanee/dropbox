@@ -62,38 +62,82 @@ function Version(){
 		let button = createElement('button','view')
 		button.innerHTML = '查看'
 		columnThree.appendChild(itemSize)
-		columnThree.appendChild(button)
-		// itemContent.onclick = function(){
-		// 	window.location.hash = `preview=${path}&mark=${item.mark}`
-		// }
+		button.onclick = function(){
+			window.location.hash = `preview=${path}&version=${item.mark}`
+		}
 		
 		if(item.action == 'create'){
 			upperLineTwo.innerHTML = `由${item.operator}添加。`
 			itemContent.appendChild(columnOne)
 			itemContent.appendChild(columnTwo)
 			itemContent.appendChild(columnThree)
+			columnThree.appendChild(button)
+		}
+		else if(item.action == 'rewrite'){
+			upperLineTwo.innerHTML = `由${item.operator}修改。`
+			itemContent.appendChild(columnOne)
+			itemContent.appendChild(columnTwo)
+			itemContent.appendChild(columnThree)
+			columnThree.appendChild(button)
 		}
 		else if(item.action == 'recover'){
 			upperLineTwo.innerHTML = `由${item.operator}恢复。`
 			itemContent.appendChild(columnOne)
 			itemContent.appendChild(columnTwo)
 			itemContent.appendChild(columnThree)
+			columnThree.appendChild(button)
 		}
 		else if(item.action == 'rename'){
 			upperLineOne.innerHTML = `${item.operator}将文件“${item.name}”重命名为“${item.rename}”。`
 			lowerLineOne.innerHTML += ' • 网络'
+			mediaIcon.innerHTML = ''
+			mediaIcon.classList.add('edit')
 			itemContent.appendChild(columnOne)
 			itemContent.appendChild(columnThree)
 		}
 		else if(item.action == 'delete'){
 			upperLineOne.innerHTML = `已被${item.operator}删除。`
 			lowerLineOne.innerHTML += ' • 网络'
-			itemSize.innerHTML = '--'
+			itemSize.innerHTML = '—'
 			mediaIcon.innerHTML = ''
+			mediaIcon.classList.add('trash')
 			itemContent.appendChild(columnOne)
 			itemContent.appendChild(columnThree)
 		}
-		
+		else if(item.action == 'move'){
+			upperLineOne.innerHTML = `${item.operator}将文件“${item.name}”从“${item.from}”移至“${item.to}”。`
+			lowerLineOne.innerHTML += ' • 网络'
+			mediaIcon.innerHTML = ''
+			mediaIcon.classList.add('post')
+			itemContent.appendChild(columnOne)
+			itemContent.appendChild(columnThree)
+		}
+		else if(item.action == 'move_rename'){
+			upperLineOne.innerHTML = `${item.operator}将文件“${item.name}”从“${item.from}”移至“${item.to}”，自动重命名为“${item.rename}”。`
+			lowerLineOne.innerHTML += ' • 网络'
+			mediaIcon.innerHTML = ''
+			mediaIcon.classList.add('post')
+			itemContent.appendChild(columnOne)
+			itemContent.appendChild(columnThree)
+		}
+		else if(item.action == 'copy'){
+			upperLineOne.innerHTML = `${item.operator}将文件“${item.name}”从“${item.from}”复制到“${item.to}”。`
+			lowerLineOne.innerHTML += ' • 网络'
+			mediaIcon.innerHTML = ''
+			mediaIcon.classList.add('post')
+			itemContent.appendChild(columnOne)
+			itemContent.appendChild(columnThree)
+			columnThree.appendChild(button)
+		}
+		else if(item.action == 'copy_rename'){
+			upperLineOne.innerHTML = `${item.operator}将文件“${item.name}”从“${item.from}”复制到“${item.to}”，自动重命名为“${item.rename}”。`
+			lowerLineOne.innerHTML += ' • 网络'
+			mediaIcon.innerHTML = ''
+			mediaIcon.classList.add('post')
+			itemContent.appendChild(columnOne)
+			itemContent.appendChild(columnThree)
+			columnThree.appendChild(button)
+		}		
 		return itemContent
 	}
 
@@ -112,6 +156,7 @@ function Version(){
 		})
 		documentList.innerHTML = ''
 		documentList.appendChild(fragment)
+		// documentList.getElementsByTagName('button')[0].classList.add('current')
 
 		function separate(){
 			let dateSeparate = createElement('div','date-separate')
