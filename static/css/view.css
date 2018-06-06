@@ -142,13 +142,11 @@
 	margin: auto;
 	text-align: center;
 }
-.item-content>.error>.message
-{
+.item-content>.error>.message{
 	color: #252525;
 	font-size: 20px;
 }
-.item-content>.error>.item-about
-{
+.item-content>.error>.item-about{
 	color: #6f6f6f;
     font-size: 12px;
     margin: 8px 0px;

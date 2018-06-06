@@ -51,8 +51,6 @@ def route(request):
             connect.close()
             return toolbox.javaify(400,"destination error")
 
-
-
         src_file_check = yield from fs.file_query(cursor,uid,src,names)
 
         if not src_file_check:

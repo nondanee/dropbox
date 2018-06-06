@@ -318,11 +318,32 @@
 	cursor: pointer;
 	user-select: none;
 }
+.body .selector .line.hide{
+	display: none;
+}
 .body .selector .line>div{
 	margin: auto 0;
 }
 .body .selector .line .fill{
 	width: 20px;
+	display: flex;
+}
+.body .selector .line .fill button{
+	width: 16px;
+	height: 16px;
+	margin: auto 0 auto auto;
+	color: var(--themeColorLight);
+	font-family: 'icomoon';
+	font-size: 16px;
+}
+.body .selector .line .fill button:focus{
+	box-shadow: none;
+}
+.body .selector .line .fill button.extend::after{
+	content: '\e922';
+}
+.body .selector .line .fill button.fold::after{
+	content: '\e921';
 }
 .body .selector .line .media-icon{
 	width: 24px;

@@ -140,52 +140,26 @@ function Recycle(){
 
 	function select(){
 		let selectedPath
+
 		request('GET',`${apiHost}/tree`)
 		.then(function(jsonBack){
 			if(jsonBack['code']==200){
-				let selector = createElement('div','selector')
 				let tree = jsonBack['data']
 				tree['name'] = 'Dropbox'
-				informWindow = new InformWindow('文件夹过滤选择器',selector,'选择','取消',['no-close','center'])
+				let fragment = createElement('div','selector')
+				informWindow = new InformWindow('文件夹过滤选择器',fragment,'选择','取消',['no-close','center'])
 				informWindow.defaultButton.disabled = true
+				let selector = new Selector(fragment,tree,informWindow)
 				informWindow.defaultButton.onclick = function(){
+					selectedPath = selector.getSelectedDirectory()
 					confirm()
 					informWindow.quit()
 				}
 				informWindow.optionalButton.onclick = function(){
 					informWindow.quit()
 				}
-				buildTree(selector,tree,0)
 			}
 		})
-
-		function buildTree(fragment,tag,depth){
-			let line = createElement('div','line')
-			for(let i=0;i<depth;i++){
-				let fill = createElement('div','fill')
-				line.appendChild(fill)
-			}
-			let mediaIcon = createElement('div','media-icon')
-			mediaIcon.innerHTML = iconDetect('directory').replace('width="40" height="40"','width="20" height="20"')
-			let itemName = createElement('div','item-name')
-			itemName.innerHTML = tag.name
-			line.appendChild(mediaIcon)
-			line.appendChild(itemName)
-			line.onclick = function(){
-				Array.from(this.parentNode.children).forEach(function(item){item.classList.remove('focus')})
-				this.classList.add('focus')
-				informWindow.defaultButton.disabled = false
-				selectedPath = tag.path
-			}
-			line.ondblclick = function(){
-				confirm()
-				informWindow.quit()
-			}
-			fragment.appendChild(line)
-			tag.children.forEach(function(item){
-				buildTree(fragment,item,depth+1)
-			})
-		}
 
 		function confirm(){
 			window.location.hash = `recycle=${selectedPath}`

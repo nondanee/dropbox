@@ -1,0 +1,2 @@
+#!/bin/bash
+gunicorn server:init --config gunicorn.conf

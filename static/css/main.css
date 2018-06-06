@@ -58,6 +58,7 @@
 	display: flex;
 	flex-grow: 1;
 	flex-shrink: 1;
+	overflow: hidden;
 }
 .document-list{
 	user-select: none;
@@ -310,9 +311,22 @@
 	height: 100%;
 	flex-shrink: 0;
 	display: flex;
+	position: relative;
 }
 .list-body .document-item .item-content .column .media-icon.deleted{
 	filter: grayscale(100%);
+}
+.list-body .document-item .item-content .column .media-icon.deleted::after{
+	content: '\e91d';
+	font-family: 'icomoon';
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	line-height: 16px;
+	position: absolute;
+	bottom: 16px;
+	right: 12px;
+	color: #6f6f6f;
 }
 .list-body .document-item .item-content .column .media-icon>*{
 	margin: auto;
@@ -339,6 +353,7 @@
 
 
 .operation-panel{
+	position: relative;
 	width: 280px;
 	padding: 0 40px;
 	box-sizing: border-box;
@@ -381,13 +396,14 @@
 .operation-panel .option button{
 	height: 32px;
 	font-size: 14px;
-	color: var(--themeColor);	
+	color: var(--themeColor);
 	cursor: pointer;
 	display: flex;
 	align-items: center;
 	padding-right: 8px;
 	display: none;
 }
+.operation-panel .menu .item::before,
 .operation-panel .option button::before{
 	font-family: "icomoon";
 	font-size: 32px;
@@ -397,6 +413,14 @@
 }
 .operation-panel .option button.upload::before{
 	content: "\e90b";
+}
+.operation-panel .menu .item.file::before,
+.operation-panel .option button.upload-file::before{
+	content: "\e923";
+}
+.operation-panel .menu .item.directory::before,
+.operation-panel .option button.upload-dir::before{
+	content: "\e924";
 }
 .operation-panel .option button.mkdir::before{
 	content: "\e908";
@@ -430,6 +454,12 @@
 }
 .operation-panel .option button.upload::after{
 	content: "上传文件";
+}
+.operation-panel .option button.upload-file::after{
+	content: "上传文件";
+}
+.operation-panel .option button.upload-dir::after{
+	content: "上传文件夹";
 }
 .operation-panel .option button.mkdir::after{
 	content: "新文件夹";
@@ -484,6 +514,7 @@
 .operation-panel.directory .download,
 .operation-panel.directory .rename,
 .operation-panel.directory .move,
+.operation-panel.directory .copy,
 .operation-panel.directory .delete{
 	display: flex;
 }
@@ -500,10 +531,26 @@
 }
 .operation-panel.normal .permission,
 .operation-panel.normal .upload,
+.operation-panel.normal .upload-file,
+.operation-panel.normal .upload-dir,
 .operation-panel.normal .mkdir,
 .operation-panel.normal .show,
 .operation-panel.normal .hide{
 	display: flex;
+}
+
+.operation-panel .menu{
+	width: 200px;
+	top: 80px;
+	left: 0; right: 0;
+	margin: auto;
+}
+.operation-panel .menu .item{
+	padding: 4px 16px 4px 10px;
+}
+.operation-panel .menu .item::before{
+	color: var(--themeColor);
+	margin-right: 4px;
 }
 
 
@@ -547,7 +594,7 @@
 }
 .menu .item.active::before{
 	font-family: "icomoon";
-	content: "\e90d";	
+	content: "\e90d";
 	text-align: center;
 }
 .menu .item.disable:hover{
@@ -599,13 +646,8 @@
 	width: 32px;
 	height: 32px;
 	line-height: 32px;
-}
-.list-header .item.active::before{
 	font-size: 23px;
-	width: 32px;
-	height: 32px;
 }
-
 .operate .menu{
 	z-index: 2;
 	top: 55px;

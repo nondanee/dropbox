@@ -172,7 +172,8 @@ function Container(){
 		permission.innerHTML = '只有您能访问'
 		operationPanel.appendChild(permission)
 		let option = createElement('div','option')
-		let uploadButton = createElement('button','upload')
+		let uploadFileButton = createElement('button','upload-file')
+		let uploadDirButton = createElement('button','upload-dir')
 		let mkdirButton = createElement('button','mkdir')
 		let viewButton = createElement('button','show')
 		let downloadButton = createElement('button','download')
@@ -183,8 +184,11 @@ function Container(){
 		let deleteButton = createElement('button','delete')
 		let smashButton = createElement('button','smash')
 
-		uploadButton.onclick = function(){
+		uploadFileButton.onclick = function(){
 			uploader.createTask()
+		}
+		uploadDirButton.onclick = function(){
+			uploader.createMultiTask()
 		}
 		mkdirButton.onclick = function(){
 			mkdir()
@@ -217,7 +221,7 @@ function Container(){
 			smash(getSelected())
 		}
 
-		let buttonArray = new Array(uploadButton,mkdirButton,viewButton,downloadButton,historyButton,renameButton,moveButton,copyButton,deleteButton,smashButton)
+		let buttonArray = new Array(uploadFileButton,uploadDirButton,mkdirButton,viewButton,downloadButton,historyButton,renameButton,moveButton,copyButton,deleteButton,smashButton)
 		buttonArray.forEach(
 		function(button){
 			let item = createElement('div','item')
@@ -232,9 +236,16 @@ function Container(){
 	}
 	init()
 
+	function getVisible(){
+		return all.filter(function(item){if (item.status == 1 || deleted == true) return item})
+	}
 
 	function getSelected(){
 		return all.filter(function(item){return item.selected == true})
+	}
+	function selectMode(){
+		let visible = getVisible()
+		return visible.some(function(item){return item.selected == true})
 	}
 
 	function getDirectoryName(){
@@ -324,7 +335,7 @@ function Container(){
 			all = jsonBack['data']
 			care = (jsonBack['message'] == 'care') ? true : false
 			list()
-			syncOperationPanel()
+			syncSelectUI()
 			documentList.classList.remove('select','all')
 		})
 	}
@@ -333,6 +344,7 @@ function Container(){
 	function list(){
 		sort()
 		refresh()
+		syncSelectUI()
 	}
 	this.list = list
 
@@ -343,14 +355,10 @@ function Container(){
 	}
 	this.add = add
 
-	function getVisible(){
-		return all.filter(function(item){if (item.status == 1 || deleted == true) return item})
-	}
-
 	function refresh(){
 		let fragment = document.createDocumentFragment()
 		getVisible().forEach(function(item){
-			fragment.appendChild(buildLine(item))
+			fragment.appendChild(buildItem(item))
 		})
 		listBody.innerHTML = ''
 		listBody.appendChild(fragment)
@@ -386,9 +394,10 @@ function Container(){
 		}
 	}
 
-	function buildLine(item){
+	function buildItem(item){
 
 		let documentItem = createElement('div','document-item')
+		item['item'] = documentItem
 		if(item.selected == true){documentItem.classList.add('selected')}
 
 		let selectButton = createElement('button','select')
@@ -483,7 +492,6 @@ function Container(){
 					}
 				]
 			}
-
 			else if(item.status == 1){
 				menu = [
 					{
@@ -552,16 +560,70 @@ function Container(){
 		return documentItem
 	}
 
-	function syncOperationPanel(){
+	function select(item){
+		if(typeof(item) == "undefined"){
+			let set = !(selectMode())
+			getVisible().forEach(function(item){
+				item.selected = set
+				if(set)
+					item['item'].classList.add('selected')
+				else
+					item['item'].classList.remove('selected')
+			})
+		}
+		else{
+			if(item['selected']){
+				item['selected'] = false
+				item['item'].classList.remove('selected')
+			}
+			else{
+				item['selected'] = true
+				item['item'].classList.add('selected')
+			}
+		}		
+		syncSelectUI()
+	}
+
+	function syncSelectUI(){
+
 		let selected = getSelected()
+		let visible = getVisible()
+		if(selected.length == 0)
+			documentList.classList.remove('select','all')
+		else{
+			documentList.classList.add('select')
+			if(selected.length == visible.length)
+				documentList.classList.add('all')
+			else
+				documentList.classList.remove('all')
+		}
+
 		selectCounter.innerHTML = `已选中 ${selected.length} 项`
 		if(selected.length == 0){
 			selectCounter.innerHTML = ''
 			if(workingDirectory == '/'){
-				defaultOperation.innerHTML = '上传文件'
+				defaultOperation.innerHTML = '上传'
 				operationPanel.className = 'operation-panel root'
 				defaultOperation.onclick = function(){
-					uploader.createTask()
+					let menu = [
+						{
+							'text':'文件',
+							'className': 'item file',
+							'click': function(){
+								uploader.createTask()
+							}
+						},
+						{
+							'text': '文件夹',
+							'className': 'item directory',
+							'click': function(){
+								uploader.createMultiTask()
+							}
+						}
+					]
+					let popup = buildMenu(menu)
+					operationPanel.appendChild(popup)
+					popup.focus()
 				}
 			}
 			else if(care){
@@ -625,37 +687,6 @@ function Container(){
 		}
 	}
 
-	function select(item){
-		let visible = getVisible()
-		if(typeof(item) == "undefined"){
-			let set = !(visible.some(function(item){return item.selected == true}))
-			visible.forEach(function(item){item.selected = set})
-		}
-		else{
-			if(item['selected'] == true)
-				item['selected'] = false
-			else
-				item['selected'] = true
-		}
-		Array.from(listBody.children).forEach(function(line,index){
-			if(visible[index].selected == true)
-				line.classList.add('selected')
-			else
-				line.classList.remove('selected')
-		})
-		let selected = getSelected()
-		if(selected.length == 0)
-			documentList.classList.remove('select','all')
-		else{
-			documentList.classList.add('select')
-			if(selected.length == visible.length)
-				documentList.classList.add('all')
-			else
-				documentList.classList.remove('all')
-		}
-		syncOperationPanel()
-	}
-
 	function mkdir(){
 		let item = {
 			'extension': '',
@@ -668,7 +699,7 @@ function Container(){
 			'type': 'directory'
 		}
 		all.unshift(item)
-		let documentItem = buildLine(all[0])
+		let documentItem = buildItem(all[0])
 		listBody.insertBefore(documentItem,listBody.firstChild)
 		let itemName = documentItem.getElementsByClassName('item-name')[0]
 		itemName.classList.add('edit')
@@ -679,15 +710,28 @@ function Container(){
 		input.onclick = function(event){
 			event.stopPropagation()
 		}
-		input.onkeyup = function(event){
-			if(event.which == 13){
+		input.onkeydown = function(event){
+			if(['<','>','/','\\',':','?','*','"','|'].indexOf(event.key) != -1){
+				// console.log(event.key)
+				notify('系统不允许使用下列字符：< > \\ / : ? * " |','error')
+				event.preventDefault()
+			}
+			else if(event.which == 13){
 				input.blur()
 			}
 		}
 		input.onblur = function(){
 			let name = this.value
+			let named = true
 			if(name == ''){
 				notify("请为新文件夹命名。",'error')
+				named = false
+			}
+			else if(illegalName(name)){
+				notify('系统不允许使用下列字符：< > \\ / : ? * " |','error')
+				named = false
+			}
+			if(!named){
 				all.shift()
 				documentItem.parentNode.removeChild(documentItem)
 			}
@@ -749,7 +793,7 @@ function Container(){
 
 
 	function rename(item){
-		let itemName = listBody.getElementsByClassName('document-item')[getVisible().indexOf(item)].getElementsByClassName('item-name')[0]
+		let itemName = item['item'].getElementsByClassName('item-name')[0]
 		itemName.classList.add('edit')
 		itemName.innerHTML = ''
 		let input = createElement('input','')
@@ -761,20 +805,33 @@ function Container(){
 		input.onclick = function(event){
 			event.stopPropagation()
 		}
-		input.onkeyup = function(event){
-			if(event.which == 13){
+		input.onkeydown = function(event){
+			if(['<','>','/','\\',':','?','*','"','|'].indexOf(event.key) != -1){
+				// console.log(event.key)
+				notify('系统不允许使用下列字符：< > \\ / : ? * " |','error')
+				event.preventDefault()
+			}
+			else if(event.which == 13){
 				input.blur()
 			}
 		}
 		input.onblur = function(){
 			let nameChange = this.value
-			if(illegalName(nameChange)){
-				notify('文件名不合法。','error')
-				return
-			}
+			let changed = true
 			if(nameChange == item['name']){
+				changed = false
+			}
+			else if(nameChange == ''){
+				notify('请提供文件名。','error')
+				changed = false
+			}
+			else if(illegalName(nameChange)){
+				notify('系统不允许使用下列字符：< > \\ / : ? * " |','error')
+				changed = false
+			}
+			if(!changed){
 				itemName.classList.remove('edit')
-				itemName.innerHTML = nameChange
+				itemName.innerHTML = item['name']
 			}
 			else{
 				request('POST',`${apiHost}/rename`,{'dir': workingDirectory,'name': item['name'],'rename': nameChange})
@@ -841,6 +898,7 @@ function Container(){
 		let titleContent = ''
 		let defaultContent = '删除'
 		let optionalContent = '取消'
+		let completePrompt = `已删除 ${items.length} 个项目。`
 		let selectedName = ''
 
 		let name = items.map(function(item){return item['name']})
@@ -877,6 +935,7 @@ function Container(){
 						item['modify'] = jsonBack['data']['modify']
 					})
 					list()
+					notify(completePrompt,'success')
 				}
 				else{
 					notify(errorReadable(jsonBack['message']),'error')
@@ -892,6 +951,7 @@ function Container(){
 		let bodyFragment = ''
 		let defaultContent = '恢复'
 		let optionalContent = '取消'
+		let completePrompt = (items.length == 1) ? `已恢复“${items[0].name}”。` : `已恢复 ${items.length} 个文件。`
 		let headerText = ''
 		let informWindow = {}
 		let directoryName = getDirectoryName()
@@ -957,7 +1017,7 @@ function Container(){
 						load()
 					else
 						list()
-					// 已恢复“”。
+					notify(completePrompt,'success')
 				}
 				else{
 					notify(errorReadable(jsonBack['message']),'error')
@@ -971,6 +1031,7 @@ function Container(){
 
 		let titleContent = (action == 'move') ? `将 ${items.length} 个项目移动到…` : `将 ${items.length} 个项目复制到…`
 		let defaultContent = (action == 'move') ? '移动' : '复制'
+		let completePrompt = ''
 		let selectedDirectory = ''
 		let informWindow
 
@@ -980,54 +1041,26 @@ function Container(){
 		request('GET',`${apiHost}/tree`)
 		.then(function(jsonBack){
 			if(jsonBack['code']==200){
-				let selector = createElement('div','selector')
 				let tree = jsonBack['data']
 				tree['name'] = 'Dropbox'
-				informWindow = new InformWindow(titleContent,selector,defaultContent,'取消',['no-close','center'])
+				let fragment = createElement('div','selector')
+				informWindow = new InformWindow(titleContent,fragment,defaultContent,'取消',['no-close','center'])
 				informWindow.defaultButton.disabled = true
+				let selector = new Selector(fragment,tree,informWindow)
 				informWindow.defaultButton.onclick = function(){
+					selectedDirectory = selector.getSelectedDirectory()
+					completePrompt = `将 ${items.length} 个项目${(action == 'move') ? '移' : '复制'}到“${selector.getSelectedName()}”。`
 					confirm()
 					informWindow.quit()
 				}
 				informWindow.optionalButton.onclick = function(){
 					informWindow.quit()
 				}
-				buildTree(selector,tree,0)
 			}
 		})
 
-
-		function buildTree(fragment,tag,depth){
-			let line = createElement('div','line')
-			for(let i=0;i<depth;i++){
-				let fill = createElement('div','fill')
-				line.appendChild(fill)
-			}
-			let mediaIcon = createElement('div','media-icon')
-			mediaIcon.innerHTML = iconDetect('directory').replace('width="40" height="40"','width="20" height="20"')
-			let itemName = createElement('div','item-name')
-			itemName.innerHTML = tag.name
-			line.appendChild(mediaIcon)
-			line.appendChild(itemName)
-			line.onclick = function(){
-				Array.from(this.parentNode.children).forEach(function(item){item.classList.remove('focus')})
-				this.classList.add('focus')
-				informWindow.defaultButton.disabled = false
-				selectedDirectory = tag.path
-			}
-			line.ondblclick = function(){
-				confirm()
-				informWindow.quit()
-			}
-			fragment.appendChild(line)
-			tag.children.forEach(function(item){
-				buildTree(fragment,item,depth+1)
-			})
-		}
-
-
 		function confirm(){
-			let apiPath = (action == 'move') ? 'move' : 'copy'
+			let apiPath = action
 			if (!selectedDirectory) return
 			if (workingDirectory == selectedDirectory && action == 'move'){
 				notify('文件已在相应文件夹中。','error')
@@ -1045,6 +1078,7 @@ function Container(){
 					else if(workingDirectory == selectedDirectory){
 						load()
 					}
+					notify(completePrompt,'success')
 				}
 				else{
 					notify(errorReadable(jsonBack['message']),'error')
@@ -1102,6 +1136,144 @@ function multipleStatus(items,headerText){
 	bodyFragment.appendChild(header)
 	bodyFragment.appendChild(itemContainer)
 	return bodyFragment
+}
+
+function Selector(fragment,tree,informWindow){
+
+	let selectedDirectory = ''
+	let selectedName = ''
+
+	function buildTree(fragment,tag,depth){
+		let line = createElement('div','line')
+		tag.line = line
+		if(depth > 1){
+			line.classList.add('hide')
+		}
+		if(depth > 0){
+			for(let i=0;i<depth;i++){
+				let fill = createElement('div','fill')
+				line.appendChild(fill)
+			}
+			if(tag.children.length != 0){
+				let extend = createElement('button','extend')
+				extend.onclick = function(event){
+					event.stopPropagation()
+					if(this.className == 'extend')
+						extendChild(tag)
+					else
+						foldChild(tag)
+				}
+				extend.ondblclick = function(event){
+					event.stopPropagation()
+				}
+				line.lastChild.appendChild(extend)
+			}
+		}
+
+		function extendChild(tag){
+			tag['line'].getElementsByTagName('button')[0].className = 'fold'
+			tag.children.forEach(function(child){
+				child['line'].classList.remove('hide')
+			})
+		}
+
+		function foldChild(tag){
+			tag['line'].getElementsByTagName('button')[0].className = 'extend'
+			tag.children.forEach(function(child){
+				child['line'].classList.add('hide')
+				if(child.children.length){
+					child['line'].getElementsByTagName('button')[0].className = 'extend'
+					foldChild(child)
+				}
+			})
+		}
+
+		let mediaIcon = createElement('div','media-icon')
+		mediaIcon.innerHTML = iconDetect('directory').replace('width="40" height="40"','width="20" height="20"')
+		let itemName = createElement('div','item-name')
+		itemName.innerHTML = tag.name
+		line.appendChild(mediaIcon)
+		line.appendChild(itemName)
+		line.onclick = function(){
+			Array.from(this.parentNode.children).forEach(function(item){item.classList.remove('focus')})
+			this.classList.add('focus')
+			informWindow.defaultButton.disabled = false
+			selectedDirectory = tag.path
+			selectedName = tag.name
+		}
+		line.ondblclick = function(){
+			informWindow.defaultButton.click()
+		}
+		fragment.appendChild(line)
+		tag.children.forEach(function(item){
+			buildTree(fragment,item,depth+1)
+		})
+	}
+
+	buildTree(fragment,tree,0)
+
+	function getSelectedDirectory(){
+		return selectedDirectory
+	}
+	function getSelectedName(){
+		return selectedName
+	}
+	this.getSelectedDirectory = getSelectedDirectory
+	this.getSelectedName = getSelectedName
+
+}
+
+
+function ShareWindow(item){
+	let mask = createElement('div','mask')
+	mask.classList.add('share')
+	let shareWindow = createElement('div','window')
+	let title = createElement('div','title')
+	let titleText = createElement('div','text')
+	titleText.innerHTML = titleContent
+	let closeButton = createElement('button','close')
+	title.appendChild(titleText)
+	title.appendChild(closeButton)
+	let question = createElement('div','question')
+	let questionText = createElement('div','text')
+	questionText.innerHTML = questionContent
+	let operate = createElement('div','operate')
+	let padBlock = createElement('div','pad')
+	let defaultButton = createElement('button','default')
+	defaultButton.innerHTML = defaultContent
+	let optionalButton = createElement('button','optional')
+	optionalButton.innerHTML = optionalContent
+	operate.appendChild(padBlock)
+	operate.appendChild(defaultButton)
+	operate.appendChild(optionalButton)
+	question.appendChild(questionText)
+	question.appendChild(operate)
+	confirmWindow.appendChild(title)
+	confirmWindow.appendChild(question)
+	confirmWindow.onclick = function(event){
+		event.stopPropagation()
+	}
+	mask.onclick = function(){
+		optionalButton.click()
+	}
+	closeButton.onclick = function(){
+		optionalButton.click()
+	}
+	optionalButton.onclick = function(){
+		quit()
+	}
+	mask.appendChild(confirmWindow)
+	document.body.appendChild(mask)
+	// resolveButton.focus()
+
+	function quit(){
+		mask.parentNode.removeChild(mask)
+	}
+
+	this.quit = quit
+	this.operate = operate
+	this.defaultButton = defaultButton
+	this.optionalButton = optionalButton
 }
 
 
@@ -1223,26 +1395,4 @@ function InformWindow(titleContent,bodyFragment,defaultContent,optionalContent,s
 	this.operate = operate
 	this.defaultButton = defaultButton
 	this.optionalButton = optionalButton
-}
-
-
-function buildMenu(menu){
-	let menuContainer = createElement('div','menu')
-	menu.forEach(function(item,index){
-		let menuItem = createElement('div',item.className)
-		menuItem.innerHTML = item.text
-		menuItem.onclick = item.click
-		menuItem.addEventListener('click',function(event){
-			event.stopPropagation()
-			menuContainer.blur()
-		})
-		menuContainer.appendChild(menuItem)
-	})
-	menuContainer.tabIndex = '0'
-	menuContainer.hideFocus = true
-	menuContainer.onblur = function(event){
-		event.stopPropagation()
-		this.parentNode.removeChild(this)
-	}
-	return menuContainer
 }

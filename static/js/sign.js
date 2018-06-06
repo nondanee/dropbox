@@ -6,6 +6,7 @@ let emailAddress
 
 
 function signUpMode(){
+	history.replaceState('','','#signup')
 	let fragment = document.createDocumentFragment()
 	let title = createElement('div','title')
 	title.innerHTML = '注册'
@@ -40,6 +41,7 @@ function signUpMode(){
 	link.innerHTML = 'Dropbox 条款'
 	link.onclick = function(event){
 		event.stopPropagation()
+		window.open('https://www.dropbox.com/terms')
 	}
 	checkbox.appendChild(link)
 	let checkboxError = createElement('div','message thin')
@@ -142,6 +144,7 @@ function signUpMode(){
 
 
 function signInMode(){
+	history.replaceState('','','#signin')
 	let fragment = document.createDocumentFragment()
 	let title = createElement('div','title')
 	title.innerHTML = '登录'
@@ -158,9 +161,15 @@ function signInMode(){
 	let emailError = createElement('div','message')
 	email.type = 'text'
 	email.placeholder = '电子邮件'
+	// email.autocomplete = 'on'
 	let password = createElement('input','')
 	password.type = 'password'
 	password.placeholder = '密码'
+	password.onkeydown = function(event){
+		if(event.which == 13){
+			button.click()
+		}
+	}
 	let passwordError = createElement('div','message')
 	let checkbox = createElement('div','checkbox')
 	checkbox.innerHTML = '保存我的信息'
@@ -247,7 +256,10 @@ headerSwitch.onclick = function(){
 }
 
 window.onload = function(){
-	signUpMode()
+	if(window.location.hash == '#signin')
+		signInMode()
+	else
+		signUpMode()
 }
 
 

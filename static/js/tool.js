@@ -16,6 +16,15 @@ function timeReadable(date){
 	return `${year}-${month}-${day} ${half}${hour}:${minute}`
 }
 
+function dateReadable(date){
+	date = new Date(date)
+	let year = date.getFullYear()
+	let month = date.getMonth() + 1
+	let day = date.getDate()
+
+	return `${year}年${month}月${day}日`
+}
+
 function mimeReadable(mime,status){
 	const dict = {
 		"image/jpeg": "图像",
@@ -152,6 +161,27 @@ function request(method,url,data){
 			xhr.send()
 		}
 	})
+}
+
+function buildMenu(menu){
+	let menuContainer = createElement('div','menu')
+	menu.forEach(function(item,index){
+		let menuItem = createElement('div',item.className)
+		menuItem.innerHTML = item.text
+		menuItem.onclick = item.click
+		menuItem.addEventListener('click',function(event){
+			event.stopPropagation()
+			menuContainer.blur()
+		})
+		menuContainer.appendChild(menuItem)
+	})
+	menuContainer.tabIndex = '0'
+	menuContainer.hideFocus = true
+	menuContainer.onblur = function(event){
+		event.stopPropagation()
+		this.parentNode.removeChild(this)
+	}
+	return menuContainer
 }
 
 function notify(message,type){

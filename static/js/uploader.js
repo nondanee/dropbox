@@ -215,13 +215,20 @@ function Uploader(){
 		item.button = actionButton
 		refreshList()
 		xhr.onreadystatechange = function(){
-			if(xhr.readyState == 4 && xhr.status == 200){
-				let jsonBack = JSON.parse(xhr.responseText)
-				item.status = jsonBack['code']
-				syncUI()
-				refreshList()
-				if(jsonBack['code']==200&&item.directory==container.getCwd()){
-					container.add(jsonBack['data'])
+			if(xhr.readyState == 4){
+				if(xhr.status == 200){
+					let jsonBack = JSON.parse(xhr.responseText)
+					item.status = jsonBack['code']
+					syncUI()
+					refreshList()
+					if(jsonBack['code']==200&&item.directory==container.getCwd()){
+						container.add(jsonBack['data'])
+					}
+				}
+				else{
+					item.status = xhr.status
+					syncUI()
+					refreshList()
 				}
 			}
 		}
@@ -241,17 +248,60 @@ function Uploader(){
 	function createTask(){
 		let directory = container.getCwd()
 		let fileInput = document.createElement("input")
-			fileInput.setAttribute("type","file")
-			fileInput.setAttribute("multiple","multiple")
-			fileInput.onchange = function () {
-				let files = this.files
-				if(files[0]){
-					Array.from(files).forEach(function(file){
+		fileInput.setAttribute("type","file")
+		fileInput.setAttribute("multiple","multiple")
+		fileInput.onchange = function () {
+			let files = Array.from(this.files)
+			if(files[0]){
+				files.forEach(function(file){
+					let item = {
+						'name': file.name,
+						'size': file.size,
+						'type': file.type,
+						'directory': directory,
+						'progress': 0,
+						'cursor': createElement('div','cursor'),
+						'status': 0
+					}
+					queue.push(item)
+					uploadFile(file,item)
+				})
+			}
+		}
+		fileInput.click()
+	}
+	this.createTask = createTask
+
+
+	function createMultiTask(){
+		let directory = container.getCwd()
+		let dirInput = document.createElement("input")
+		dirInput.setAttribute("type","file")
+		dirInput.setAttribute("multiple","multiple")
+		dirInput.webkitdirectory = true
+		dirInput.onchange = function () {
+			let files = Array.from(this.files)
+			if(files[0]){
+				let name = files[0].webkitRelativePath.split('/')[0]
+				let dirs = files.map(function(file){
+					return file.webkitRelativePath.split('/').slice(0,-1).join('/')
+				})
+				dirs = new Set(dirs)
+				dirs = Array.from(dirs).join('|')
+				request('POST',`${apiHost}/makedirs`,{'dir': directory,'name': name})
+				.then(function(jsonBack){
+					if(directory == container.getCwd()){
+						container.load()
+					}
+					files.forEach(function(file){
+						let relativeDir = file.webkitRelativePath.split('/').slice(0,-1).join('/')
+						let fileName = file.webkitRelativePath.split('/').slice(-1)
+						let absoluteDir = `${(directory == '/') ? '' : directory}/${relativeDir}`
 						let item = {
-							'name': file.name,
+							'name': fileName,
 							'size': file.size,
 							'type': file.type,
-							'directory': directory,
+							'directory': absoluteDir,
 							'progress': 0,
 							'cursor': createElement('div','cursor'),
 							'status': 0
@@ -259,11 +309,12 @@ function Uploader(){
 						queue.push(item)
 						uploadFile(file,item)
 					})
-				}
+				})
 			}
-			fileInput.click()
+		}
+		dirInput.click()
 	}
-	this.createTask = createTask
+	this.createMultiTask = createMultiTask
 
 
 }

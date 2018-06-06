@@ -69,13 +69,19 @@ def route(request):
     if 'Range' in request.headers: headers['Range'] = request.headers['Range']
     session = aiohttp.ClientSession(headers = headers)
 
-    response = yield from session.get(target_url)
-    headers = dict(response.headers)
+    try:
+        response = yield from session.get(target_url,timeout = 5)
+        headers = dict(response.headers)
     
-    disposition = 'attachment' if action == 'download' else 'inline'
-    headers['Content-Disposition'] = '''{}; filename="{}"; filename*=utf-8' '{}'''.format(disposition,filename,urllib.parse.quote(filename))
+        disposition = 'attachment' if action == 'download' else 'inline'
+        headers['Content-Disposition'] = '''{}; filename="{}"; filename*=utf-8' '{}'''.format(disposition,filename,urllib.parse.quote(filename))
 
-    stream = aiohttp.web.StreamResponse( 
+    except:
+        yield from session.close()
+        return toolbox.javaify(503,"service unavailable")
+
+    else:
+        stream = aiohttp.web.StreamResponse( 
         status = response.status, 
         headers = headers
     )

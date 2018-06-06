@@ -31,11 +31,24 @@ def create_pool(app):
     )
     app['pool'] = pool
 
+# @asyncio.coroutine
+# def create_pool_pg(app):
+#     pool = yield from aiopg.create_pool(
+#         '''dbname=devs8tb30rdln2
+#            user=ajdeyhnargzdnw
+#            password=2f036523655f09aa6daa042c5402cc009effc6abf6fa625d57e091aa225dfaa2
+#            host=ec2-107-20-133-82.compute-1.amazonaws.com
+#            port=5432
+#         '''
+#     )
+#     app['pool'] = pool
+
 
 @asyncio.coroutine
 def init(loop=None):
     app = web.Application(loop=loop,client_max_size=0)
     app.on_startup.append(create_pool)
+    # app.on_startup.append(create_pool_pg)
 
     # app["working_dir"] = str(working_directory)
     # app["temp_dir"] = str(working_directory/"temp")

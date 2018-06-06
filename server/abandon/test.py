@@ -20,4 +20,4 @@ def route(request):
     # mp3_file = mp3.file
     # content = mp3_file.read()
 
-    return toolbox.javaify(200,'???',)
+    return toolbox.javaify(200,'ok')

@@ -44,6 +44,25 @@ function Sidebar(){
 		tab.appendChild(productType)
 		tab.appendChild(member)
 		tab.appendChild(memberSwitch)
+		tab.onclick = function(){
+			let menu = [
+				{
+					'text':'开始免费试用 Dropbox Business',
+					'className': 'item disable'
+				},
+				{
+					'text': '',
+					'className': 'rule'
+				},
+				{
+					'text':'个人',
+					'className': 'item active'
+				}
+			]
+			let popup = buildMenu(menu)
+			nav.appendChild(popup)
+			popup.focus()
+		}
 		nav.appendChild(logo)
 		nav.appendChild(title)
 		nav.appendChild(option)
@@ -64,6 +83,104 @@ function Sidebar(){
 	}
 	this.syncOption = syncOption
 }
+
+(function Pendant(){
+
+	let corner = createElement('div','corner')
+	let userAvatar = createElement('button','avatar')
+
+	userAvatar.onclick = function(){
+		let menu = [
+			{
+				'text':'设置',
+				'className': 'item disable'
+			},
+			{
+				'text': '安装',
+				'className': 'item disable'
+			},
+			{
+				'text': '',
+				'className': 'rule'
+			},
+			{
+				'text':'注销',
+				'className': 'item',
+				'click': function(){
+					request('POST',`${apiHost}/signout`)
+					.then(function(jsonBack){
+						if(jsonBack['code'] == 200)
+							window.location.href = '/'
+						else
+							notify(errorReadable(jsonBack['message']),'error')
+					})
+				}
+			}
+		]
+		let popup = buildMenu(menu)
+
+		request('GET',`${apiHost}/account`)
+		.then(function(jsonBack){
+			let account = jsonBack['data']
+			let block = createElement('div','block')
+			let user = createElement('div','user')
+			let avatar = createElement('div','avatar')
+			let name = createElement('div','name')
+			name.innerHTML = account['name']
+			user.appendChild(avatar)
+			user.appendChild(name)
+
+			let quota = createElement('div','quota')
+			let progress = createElement('div','progress')
+			let cursor = createElement('div','cursor')
+			cursor.style.width = `${account['usage']/2147483648*100}%`
+			progress.appendChild(cursor)
+			quota.innerHTML = `已使用 ${sizeReadable(account['usage'])}（共 2 GB）`
+			quota.insertBefore(progress,quota.firstChild)
+
+			let update = createElement('div','update')
+			update.innerHTML = '升级'
+			update.onclick = function(event){
+				window.open('https://www.dropbox.com/plans?trigger=direct')
+			}
+
+			block.appendChild(user)
+			block.appendChild(quota)
+			block.appendChild(update)
+			popup.insertBefore(block,popup.firstChild)
+			corner.appendChild(popup)
+			popup.focus()
+		})
+	}
+	corner.appendChild(userAvatar)
+	document.body.appendChild(corner)
+	
+	let support = createElement('div','support')
+	let more = createElement('button','more')
+	more.onclick = function (){
+		let menu = ['安装','移动','博客','工作机会','开发人员','联系我们','定价','版权','企业版','语言']	
+		menu = menu.map(function(item){return {'text': item, 'className': 'item disable'}})
+		let popup = buildMenu(menu)
+		support.appendChild(popup)
+		popup.focus()
+	}
+	let privacy = createElement('button','privacy')
+	privacy.innerHTML = '隐私'
+	privacy.onclick = function(){
+		window.open("https://www.dropbox.com/privacy")
+	}
+	let help = createElement('button','help')
+	help.innerHTML = '?'
+	help.onclick = function(){
+		window.open("https://www.dropbox.com/help")
+	}
+	support.appendChild(more)
+	support.appendChild(privacy)
+	support.appendChild(help)
+	document.body.appendChild(support)
+	
+})()
+
 
 const siderbar = new Sidebar()
 const container = new Container()

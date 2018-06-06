@@ -53,6 +53,7 @@ def route(request):
 
         try:
             file_name = re.search(r'filename="([^"]+)"',part.headers["Content-Disposition"]).group(1)
+            file_name = os.path.split(file_name)[1]
         except:
             yield from cursor.close()
             connect.close()

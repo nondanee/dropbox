@@ -2,7 +2,8 @@ html = '''<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-	<title></title>
+	<title>Dropbox</title>
+	<link rel="shortcut icon" href="/static/dropbox.ico">
 	<link rel="stylesheet" type="text/css" href="/static/css/base.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/sign.css">
 </head>

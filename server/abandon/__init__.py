@@ -1,19 +1,21 @@
-from . import index, home, signin, signup
+from . import index, home, signin, signup, signout, account
 from . import upload, ls, mkdir, rename, status, tree, recycle, preview, history
-from . import remove_smash_recover, move_copy
+from . import remove_smash_recover, move_copy, share
 from . import source, compress, frame
-from . import test
+from . import test, mkdirs
 
 def setup_routes(app):
 
     app.router.add_route("GET", "/", index.route)
     app.router.add_route("GET", "/home", home.route)
+    app.router.add_route("GET", "/account", account.route)
     
     app.router.add_route("POST", "/signin", signin.route)
     app.router.add_route("POST", "/signup", signup.route)
+    app.router.add_route("POST", "/signout", signout.route)
 
     # app.router.add_route("OPTIONS", "/test", test.route)
-    # app.router.add_route("POST", "/test", test.route)
+    app.router.add_route("GET", "/test", test.route)
     app.router.add_route("POST", "/upload", upload.route)
     app.router.add_route("OPTIONS", "/upload", upload.route)
     app.router.add_route("GET", "/list", ls.route)
@@ -23,7 +25,12 @@ def setup_routes(app):
     app.router.add_route("GET", "/preview", preview.route)
     app.router.add_route("GET", "/history", history.route)
 
+    app.router.add_route("GET", "/share", share.route)
+    app.router.add_route("POST", "/share", share.route)
+    app.router.add_route("DELETE", "/share", share.route)
+
     app.router.add_route("POST", "/makedir", mkdir.route)
+    app.router.add_route("POST", "/makedirs", mkdirs.route)
     app.router.add_route("POST", "/rename", rename.route)
 
     app.router.add_route("POST", "/{action:move}", move_copy.route)

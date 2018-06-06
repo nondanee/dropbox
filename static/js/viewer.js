@@ -26,7 +26,7 @@ function Viewer(){
 				item = jsonBack['data']
 				if(!open)
 					init()
-				render()
+				render(itemContent,item)
 				open = true
 			}
 			else{
@@ -106,15 +106,15 @@ function Viewer(){
 				},
 				{
 					'text': '禁用评论',
-					'className': 'item',
+					'className': 'item disable',
 				},
 				{
 					'text': '显示未解决的评论',
-					'className': 'item',
+					'className': 'item disable',
 				},
 				{
 					'text': '退订通知',
-					'className': 'item',
+					'className': 'item disable',
 				},
 			]
 			let popup = buildMenu(menu)
@@ -142,86 +142,86 @@ function Viewer(){
 		a.click()
 	}
 
-	function render(){
-		itemContent.innerHTML = ''
+}
 
-		if(item.type.indexOf('image')!=-1){
-			let imageContainer = createElement('img')
-			imageContainer.src = `${apiHost}/source/${item.name}?source=${item.source}`
-			itemContent.appendChild(imageContainer)
-		}
+function render(itemContent,item){
+	itemContent.innerHTML = ''
 
-		else if(item.type=='audio/mpeg'||item.type=='audio/mp3'){
-			let audiojsImport = createElement('script')
-			audiojsImport.src = '/static/audio.js/audio.min.js'
-			audiojsImport.onload = function(){
-				audiojs.events.ready(function() {
-					audiojs.createAll()
-				})
-			}
-			previewWindow.appendChild(audiojsImport)
-			let audioContainer = createElement('audio','')
-			audioContainer.setAttribute('preload','auto')
-			audioContainer.src = `${apiHost}/source/${item.name}?source=${item.source}`
-			itemContent.appendChild(audioContainer)
-		}
-
-		else if(item.type=='video/mp4'){
-			let videojsImport = createElement('script')
-			videojsImport.src = '/static/video.js/video.min.js'
-			previewWindow.appendChild(videojsImport)
-			let videocssImport = createElement('link','')
-			videocssImport.rel = 'stylesheet'
-			videocssImport.href = '/static/video.js/video-js.min.css'
-			previewWindow.appendChild(videocssImport)
-			let videoContainer = createElement('video','video-js vjs-big-play-centered')
-			videoContainer.setAttribute('controls','')
-			videoContainer.setAttribute('preload','auto')
-			videoContainer.setAttribute('data-setup','{}')
-			let videoSource = createElement('source','')
-			videoSource.type = 'video/mp4'
-			videoSource.src = `${apiHost}/source/${item.name}?source=${item.source}`
-			videoContainer.appendChild(videoSource)
-			itemContent.appendChild(videoContainer)
-		}
-
-		else if(item.type=='application/pdf'){
-			let pdfIframe = createElement('iframe')
-			pdfIframe.allowFullscreen = true
-			pdfIframe.src = `${apiHost}/pdf/${item.name}?source=${item.source}`
-			itemContent.appendChild(pdfIframe)
-		}
-
-		else if(item.type.indexOf('officedocument')!=-1||item.type.indexOf('vnd.ms-')!=-1||item.type.indexOf('msword')!=-1){
-			let pdfIframe = createElement('iframe')
-			pdfIframe.classList.add('office')
-			pdfIframe.src = `${apiHost}/office/${item.name}?source=${item.source}`
-			itemContent.appendChild(pdfIframe)
-		}
-		else{
-			let errorBlock = createElement('div','error')
-			let image = createElement('div','image')
-			image.innerHTML = '<img src="https://cfl.dropboxstatic.com/static/images/previews/error/filetype_not_supported_1x-vflmIVODZ.png" srcset="https://cfl.dropboxstatic.com/static/images/previews/error/filetype_not_supported_2x-vflE8HW8X.png 2x" alt="">'
-			let message = createElement('div','message')
-			message.innerHTML = '该文件无法预览'
-			let itemAbout = createElement('div','item-about')
-			itemAbout.innerHTML  = `${item.name} · ${sizeReadable(item.size)}`
-			let downloadButton = createElement('button','download')
-			downloadButton.innerHTML = '下载'
-			downloadButton.onclick = function(){
-				download()
-			}
-			let link = createElement('a','link')
-			link.innerHTML = '了解更多。'
-			link.href = 'https://www.dropbox.com/help/files-folders/file-types-that-preview'
-			link.target = '_blank'
-			errorBlock.appendChild(image)
-			errorBlock.appendChild(message)
-			errorBlock.appendChild(itemAbout)
-			errorBlock.appendChild(downloadButton)
-			errorBlock.appendChild(link)
-			itemContent.appendChild(errorBlock)
-		}
+	if(item.type.indexOf('image')!=-1){
+		let imageContainer = createElement('img')
+		imageContainer.src = `${apiHost}/source/${item.name}?source=${item.source}`
+		itemContent.appendChild(imageContainer)
 	}
 
+	else if(item.type=='audio/mpeg'||item.type=='audio/mp3'){
+		let audiojsImport = createElement('script')
+		audiojsImport.src = '/static/audio.js/audio.min.js'
+		audiojsImport.onload = function(){
+			audiojs.events.ready(function() {
+				audiojs.createAll()
+			})
+		}
+		itemContent.appendChild(audiojsImport)
+		let audioContainer = createElement('audio','')
+		audioContainer.setAttribute('preload','auto')
+		audioContainer.src = `${apiHost}/source/${item.name}?source=${item.source}`
+		itemContent.appendChild(audioContainer)
+	}
+
+	else if(item.type=='video/mp4'){
+		let videojsImport = createElement('script')
+		videojsImport.src = '/static/video.js/video.min.js'
+		itemContent.appendChild(videojsImport)
+		let videocssImport = createElement('link','')
+		videocssImport.rel = 'stylesheet'
+		videocssImport.href = '/static/video.js/video-js.min.css'
+		itemContent.appendChild(videocssImport)
+		let videoContainer = createElement('video','video-js vjs-big-play-centered')
+		videoContainer.setAttribute('controls','')
+		videoContainer.setAttribute('preload','auto')
+		videoContainer.setAttribute('data-setup','{}')
+		let videoSource = createElement('source','')
+		videoSource.type = 'video/mp4'
+		videoSource.src = `${apiHost}/source/${item.name}?source=${item.source}`
+		videoContainer.appendChild(videoSource)
+		itemContent.appendChild(videoContainer)
+	}
+
+	else if(item.type=='application/pdf'){
+		let pdfIframe = createElement('iframe')
+		pdfIframe.allowFullscreen = true
+		pdfIframe.src = `${apiHost}/pdf/${item.name}?source=${item.source}`
+		itemContent.appendChild(pdfIframe)
+	}
+
+	else if(item.type.indexOf('officedocument')!=-1||item.type.indexOf('vnd.ms-')!=-1||item.type.indexOf('msword')!=-1){
+		let pdfIframe = createElement('iframe')
+		pdfIframe.classList.add('office')
+		pdfIframe.src = `${apiHost}/office/${item.name}?source=${item.source}`
+		itemContent.appendChild(pdfIframe)
+	}
+	else{
+		let errorBlock = createElement('div','error')
+		let image = createElement('div','image')
+		image.innerHTML = '<img src="https://cfl.dropboxstatic.com/static/images/previews/error/filetype_not_supported_1x-vflmIVODZ.png" srcset="https://cfl.dropboxstatic.com/static/images/previews/error/filetype_not_supported_2x-vflE8HW8X.png 2x" alt="">'
+		let message = createElement('div','message')
+		message.innerHTML = '该文件无法预览'
+		let itemAbout = createElement('div','item-about')
+		itemAbout.innerHTML  = `${item.name} · ${sizeReadable(item.size)}`
+		let downloadButton = createElement('button','download')
+		downloadButton.innerHTML = '下载'
+		downloadButton.onclick = function(){
+			download()
+		}
+		let link = createElement('a','link')
+		link.innerHTML = '了解更多。'
+		link.href = 'https://www.dropbox.com/help/files-folders/file-types-that-preview'
+		link.target = '_blank'
+		errorBlock.appendChild(image)
+		errorBlock.appendChild(message)
+		errorBlock.appendChild(itemAbout)
+		errorBlock.appendChild(downloadButton)
+		errorBlock.appendChild(link)
+		itemContent.appendChild(errorBlock)
+	}
 }

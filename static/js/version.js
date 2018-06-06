@@ -98,10 +98,10 @@ function Version(){
 
 	function list(){
 		let fragment = document.createDocumentFragment()
-		let datePrevious = timeReadable(all[0]['modify']).split(' ').shift()
+		let datePrevious = dateReadable(all[0]['modify'])
 		fragment.appendChild(separate())
 		all.forEach(function(item){
-			let dateCurrent = timeReadable(item['modify']).split(' ').shift()
+			let dateCurrent = dateReadable(item['modify'])
 			if(datePrevious!=dateCurrent){
 				datePrevious=dateCurrent
 				fragment.appendChild(separate())

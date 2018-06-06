@@ -102,3 +102,200 @@
 	font-family: "icomoon";
 	content: "\e914";
 }
+.nav .menu{
+	position: absolute;
+	z-index: 5;
+	bottom: 70px;
+	left: 20px;
+	padding: 0;
+	margin: 0;
+	width: initial;
+	box-shadow: 0 4px 10px 4px rgba(0,0,0,0.06);
+	border: 1px solid rgba(0,0,0,0.1);
+}
+.nav .menu .item{
+	height: 56px;
+	line-height: 56px;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	min-width: 130px;
+	padding-right: 32px;
+}
+.nav .menu .rule{
+	margin: 0 0 0 40px;
+}
+.nav .menu .item::before{
+	content: "";
+	font-size: 23px;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+
+.corner{
+	height: 32px;
+	position: absolute;
+	z-index: 5;
+	top: 40px;
+	right: 40px;
+}
+
+.corner .avatar{
+	border-radius: 50%;
+	width: 32px;
+	height: 32px;
+	background-color: #e8e8e8;
+	background-image: url(/static/font/faceholder.svg);
+	background-size: cover;
+}
+.corner .menu{
+	position: absolute;
+	padding: 0;
+	top: 40px;
+	right: -8px;
+	width: initial;
+	min-width: 160px;
+	width: 264px;
+	user-select: none;
+}
+.corner .menu .item{
+	padding: 0 16px;
+}
+.corner .menu .item:last-child{
+	margin: 16px 0;
+}
+.corner .menu .rule{
+	margin: 16px 0 0 0;
+}
+
+.corner .menu .block{
+	padding: 16px;
+	text-align: left;
+	border-bottom: 1px solid #e6e8eb;
+	margin-bottom: 16px;
+}
+.corner .menu .block .user{
+	display: flex;
+	align-items: center;
+}
+.corner .menu .block .user .avatar{
+	position: initial;
+	width: 40px;
+	height: 40px;
+}
+.corner .menu .block .user .name{
+	font-size: 14px;
+	color: #252525;
+	overflow: hidden;
+	padding-left: 12px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.corner .menu .block .quota{
+	color: #6f6f6f;
+	font-size: 12px;
+	line-height: 24px;
+	font-family: "AtlasGrotesk";
+}
+
+.corner .menu .block .quota .progress{
+	background-color: #e8e8e8;
+	height: 2px;
+	margin: 19px 0 16px 0;
+	display: flex;
+}
+.corner .menu .block .quota .progress .cursor{
+	background-color: var(--themeColor);
+}
+.corner .menu .block .update{
+	display: inline-block;
+	font-size: 14px;
+	color: var(--themeColorLight);
+	line-height: 24px;
+	cursor: pointer;
+}
+
+
+.support{
+	position: absolute;
+	z-index: 5;
+	padding: 3px 0 9px 0;
+	bottom: 0;
+	right: 89px; 
+	display: flex;
+	align-items: center;
+}
+
+
+.support .more{
+	border-color: transparent;
+	color: #6f6f6f;
+	font-family: "icomoon";
+	font-size: 32px;
+	line-height: 30px;
+	padding: 0 1px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent;
+	background-color: white;
+	box-sizing: border-box;
+	height: 32px;
+	margin-right: 16px;
+}
+.support .more::after{
+	content: "\e902";
+}
+.support .privacy{
+	font-size: 14px;
+	color: #6f6f6f;
+	margin-right: 24px;
+	cursor: pointer;
+}
+
+.support .help{
+	width: 32px;
+	height: 32px;
+	line-height: 28px;
+	text-align: center;
+	box-sizing: border-box;
+	border: 2px solid #6f6f6f;
+	border-radius: 50%;
+	font-size: 16px;
+	font-weight: 500;
+	color: #6f6f6f;
+	font-family: 'AtlasGrotesk';
+	background-color: white;
+	text-decoration: none;
+}
+
+.support:hover .more{
+	border-color: #c6c6c6;
+}
+.support .more:hover,
+.support .help:hover{
+	border-color: var(--themeColor);
+}
+
+.support .privacy:focus{
+	box-shadow: none;
+	color: var(--themeColor);
+}
+
+.support .more:hover,
+.support .privacy:hover,
+.support .help:hover{
+	color: var(--themeColor);
+}
+
+.support .menu{
+	bottom: 48px;
+	right: 92px;
+}
+.support .menu .item{
+	padding: 0 16px;
+}
+.support .menu:hover+.more{
+	border-color: #c6c6c6;
+}

@@ -59,6 +59,7 @@ def route(request):
             
             if action == 0 or action == 1:
                 type_previous, size_previous, md5_previous = line[4].split('|')
+                size_previous = int(size_previous)
 
             item = {
                 'name': name_previous,
