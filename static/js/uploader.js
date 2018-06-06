@@ -20,10 +20,10 @@ function Uploader(){
 	}
 
 	function goon(){
+		syncUI()
 		let running = getRunning()
 		if(running.length != 0) return
 		let waiting = getWaiting()
-		console.log(waiting)
 		if(waiting.length == 0) return
 		uploadFile(waiting[0])
 	}
