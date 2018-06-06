@@ -20,7 +20,7 @@ function Uploader(){
 	}
 
 	function goon(){
-		syncUI()
+		refreshList()
 		let running = getRunning()
 		if(running.length != 0) return
 		let waiting = getWaiting()
@@ -131,7 +131,7 @@ function Uploader(){
 		informWindow = new InformWindow('上传详情',taskList,defaultContent,'添加更多文件',['no-close','center','upload','default-reverse','no-frame'])
 		taskList.parentNode.appendChild(countdown)
 		informWindow.defaultButton.onclick = function(){
-			if(queue.some(function(task){return task.status==0})){
+			if(queue.some(function(task){return task.status==0||task.status==1})){
 				informWindow.quit()
 				showIndicator()
 				informWindow = null				
