@@ -58,11 +58,13 @@
 	width: 365px;
 	align-items: center;
 	margin-right: 10px;	
+	flex-shrink: 0;
 }
 .mask.center .window.upload .body .task-list .task-item .task-status{
 	display: flex;
 	flex-grow: 1;
 	align-items: center;
+	overflow: hidden;
 }
 .mask.center .window.upload .body .task-list .task-item .status-icon{
 	display: flex;
@@ -92,6 +94,9 @@
 .mask.center .window.upload .body .task-list .task-item .task-status .item-directory{
 	color: var(--themeColorLight);
 	cursor: pointer;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .mask.center .window.upload .body .task-list .task-item .task-status .item-directory:hover{
 	text-decoration: underline;

@@ -2,7 +2,6 @@ function Uploader(){
 
 	let indicatorOpened = false
 	let indicator = createElement('div','upload-indicator')
-	let detailButton = createElement('button','detail')
 	let message = createElement('div','message')
 	let overall = createElement('div','cursor')
 	let taskList = createElement('div','task-list')
@@ -11,37 +10,10 @@ function Uploader(){
 	let previousCheck = {'time': new Date().getTime(),'chunk': 0}
 	let queue = []
 
-	function getRunning(){
-		return queue.filter(function(task){if(task.status == 1)return task})
-	}
-
-	function getWaiting(){
-		return queue.filter(function(task){if(task.status == 0)return task})
-	}
-
-	function goon(){
-		let running = getRunning()
-		if(running.length != 0) return
-		let waiting = getWaiting()
-		console.log(waiting)
-		if(waiting.length == 0) return
-		uploadFile(waiting[0])
-	}
-
-	function initAbortButton(item){
-		item.button = createElement('button','action')
-		item.button.onclick = function(){
-			item.status = -1
-			syncUI()
-			refreshList()
-			goon()
-			console.log(item.status)
-		}
-	}
-
 	function initIndicator(){
 		let progress = createElement('div','progress')
 		let icon = createElement('div','icon')
+		let detailButton = createElement('button','detail')
 		detailButton.innerHTML = '查看详情'
 		detailButton.onclick = function(){
 			hideIndicator()
@@ -86,7 +58,7 @@ function Uploader(){
 			taskItem.classList.add('success')
 		else if(item.status == -1)
 			taskItem.classList.add('cancel')
-		else if(item.status > 1)
+		else if(item.status > 0)
 			taskItem.classList.add('error')
 		let itemInformation = createElement('div','item-information')
 		let mediaIcon = createElement('div','media-icon')
@@ -99,7 +71,7 @@ function Uploader(){
 		itemInformation.appendChild(itemName)
 		itemInformation.appendChild(itemSize)
 		let taskStatus = createElement('div','task-status')
-		if(item.status == 0||item.status == 1||item.status == 200){
+		if(item.status==0||item.status==200){
 			let itemDirectory = createElement('div','item-directory')
 			itemDirectory.innerHTML = (item.directory == '/') ? '文件' : '文件' + item.directory
 			itemDirectory.onclick = function(){
@@ -108,7 +80,7 @@ function Uploader(){
 			}
 			taskStatus.appendChild(itemDirectory)
 		}
-		else if(item.status == -1){
+		else if(item.status==-1){
 			let message = createElement('div','message')
 			message.innerHTML = '已取消'
 			taskStatus.appendChild(message)
@@ -148,13 +120,13 @@ function Uploader(){
 
 	function overallWatcher(){
 		let currentTime = new Date().getTime()
-		// if(currentTime - previousCheck.time < 500) return // control
+		if(currentTime - previousCheck.time < 500) return // control
 		
 		let runningTaskSize = 0
 		let runningTaskLoaded = 0
 		let currentChuck = 0
 		queue.forEach(function(task){
-			if(task.status==1){
+			if(task.status==0){
 				runningTaskSize += task.size
 				runningTaskLoaded += task.progress * task.size
 				currentChuck += task.progress * task.size
@@ -182,10 +154,9 @@ function Uploader(){
 	this.refreshList = refreshList
 
 	function syncUI(){
-		let running = getRunning()
-		let waiting = getWaiting()
-		if(waiting.length == 0&&running.length == 0){
-			let error = queue.filter(function(task){if(task.status>1&&task.status!=200)return task})
+		let running = queue.filter(function(task){if(task.status==0)return task})
+		if(running.length == 0){
+			let error = queue.filter(function(task){if(task.status>0&&task.status!=200)return task})
 			let success = queue.filter(function(task){if(task.status==200)return task})
 			if(error.length!=0){
 				indicator.className = 'upload-indicator error'
@@ -197,7 +168,6 @@ function Uploader(){
 			}
 			if(informWindow){informWindow.defaultButton.innerHTML = '完成'}
 			countdown.classList.add('hide')
-			detailButton.innerHTML = '查看详情'
 		}
 		else{
 			indicator.className = 'upload-indicator run'
@@ -205,12 +175,11 @@ function Uploader(){
 				let remainTime = secondReadable(previousCheck.wait)
 				countdown.classList.remove('hide')
 				countdown.innerHTML = `剩余 ${remainTime}`
-				message.innerHTML = `正在上传 ${(running.length != 0) ? running[0]['name'] : waiting[0]['name']} - 剩余 ${remainTime}`
+				message.innerHTML = (running.length == 1) ? `正在上传 ${running[0]['name']} - 剩余 ${remainTime}` : `正在上传 ${running.length}个文件 - 剩余 ${remainTime}`
 			}
 			else{
-				message.innerHTML = `正在上传 ${(running.length != 0) ? running[0]['name'] : waiting[0]['name']}`
+				message.innerHTML = (running.length == 1) ? `正在上传 ${running[0]['name']}` : `正在上传 ${running.length}个文件`
 			}
-			detailButton.innerHTML = (waiting.length == 0) ? '查看详情' : `剩余 ${waiting.length} 个文件`
 			if(!informWindow&&!indicatorOpened){showIndicator()}
 			if(informWindow){informWindow.defaultButton.innerHTML = '隐藏'}
 		}
@@ -233,17 +202,17 @@ function Uploader(){
 
 
 	function uploadFile(item){
-		item.status = 1
 		let formData = new FormData()
 		formData.append("file",item['file'])
 		let xhr = new XMLHttpRequest()
-		item.button.addEventListener('click', function(){
-			// item.status = -1
+		let actionButton = createElement('button','action')
+		actionButton.onclick = function(){
+			item.status = -1
 			xhr.abort()
-			// syncUI()
-			// refreshList()
-			// goon()
-		})
+			syncUI()
+			refreshList()
+		}
+		item.button = actionButton
 		refreshList()
 		xhr.onreadystatechange = function(){
 			if(xhr.readyState == 4){
@@ -257,12 +226,10 @@ function Uploader(){
 					}
 				}
 				else{
-					if(xhr.status > 0)
-						item.status = xhr.status
+					item.status = xhr.status
 					syncUI()
 					refreshList()
 				}
-				goon()
 			}
 		}
 		xhr.upload.onprogress = function(event){
@@ -297,9 +264,8 @@ function Uploader(){
 						'cursor': createElement('div','cursor'),
 						'status': 0
 					}
-					initAbortButton(item)
 					queue.push(item)
-					goon()
+					uploadFile(item)
 				})
 			}
 		}
@@ -342,9 +308,8 @@ function Uploader(){
 							'cursor': createElement('div','cursor'),
 							'status': 0
 						}
-						initAbortButton(item)
 						queue.push(item)
-						goon()
+						uploadFile(item)
 					})
 				})
 			}

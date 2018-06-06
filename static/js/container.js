@@ -348,10 +348,14 @@ function Container(){
 	}
 	this.list = list
 
-	function add(item){
-		all.push(item)
+	function add(newItem){
+		let same = -1
+		all.forEach(function(item,index){if(item.name == newItem.name){same = index}})
+		if(same != -1)
+			all.splice(same,1)
+		all.push(newItem)
 		list()
-		select(item)
+		select(newItem)
 	}
 	this.add = add
 
