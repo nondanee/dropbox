@@ -24,6 +24,10 @@
     "QINIU_SECRET": {
       "description": "qiniu's secret key",
       "value": ""
+    },
+    "HEROKU_URL": {
+      "description": "heroku's url (if you use a random name, please change it after deployment)",
+      "value": "https://???.herokuapp.com/"
     }
   },
   "success_url": "/"
