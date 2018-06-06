@@ -35,7 +35,6 @@ function Uploader(){
 			syncUI()
 			refreshList()
 			goon()
-			console.log(item.status)
 		}
 	}
 

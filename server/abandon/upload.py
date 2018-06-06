@@ -81,7 +81,7 @@ def route(request):
         json_back = yield from response.text()
         json_back = json.loads(json_back)
         file_type = json_back["type"]
-        size = json_back["size"]
+        size = int(json_back["size"])
         md5 = json_back["key"].split("/")[-1]
     except Exception as error:
         print(error)
