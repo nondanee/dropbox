@@ -26,9 +26,10 @@ try:
         )
     ''')
     cursor.execute('''
-        create table repository(
+        create table garage(
             id int(8) zerofill not null auto_increment,
-            directory int(8) zerofill not null,
+            uid int(8) zerofill not null,
+            directory varchar(768) not null,
             name varchar(400) not null,
             type varchar(100) not null,
             modify datetime not null,
@@ -36,31 +37,30 @@ try:
             md5 varchar(32) not null,
             share tinyint(1) not null,
             status tinyint(1) not null,
-            primary key(id)
+            index(directory),
+            primary key(id),
+            foreign key(uid) references user(id) on delete cascade on update cascade
         )
         ''')
     cursor.execute('''
-        create table history(
-            id int(8) zerofill not null,
-            version int(4) not null,
-            name varchar(400) not null,
-            modify datetime not null,
-            size int(10) not null,
-            md5 varchar(32) not null,
-            primary key(id,version),
-            foreign key(id) references repository(id) on delete cascade on update cascade
+        create table operation(
+            id int(8) zerofill not null auto_increment,
+            gid int(8) zerofill not null,
+            occur datetime not null,
+            action tinyint(1) not null,
+            original varchar(768) not null,
+            modify varchar(768) not null,
+            primary key(id),
+            foreign key(gid) references garage(id) on delete cascade on update cascade
         )
         ''')
     cursor.execute('''
         create table share(
             id int(8) zerofill auto_increment,
-            uid int(8) zerofill not null,
-            directory int(8) zerofill not null,
-            item varchar(100) not null,
+            gid int(8) zerofill not null,
             start datetime not null,
             primary key(id),
-            foreign key(directory) references repository(id) on delete cascade on update cascade,
-            foreign key(uid) references user(id) on delete cascade on update cascade
+            foreign key(gid) references garage(id) on delete cascade on update cascade
         )
         ''')
 except Exception as e:
