@@ -46,7 +46,8 @@ def create_pool(app):
 
 @asyncio.coroutine
 def init(loop=None):
-    app = web.Application(loop=loop,client_max_size=0)
+    # app = web.Application(loop=loop,client_max_size=0)
+    app = web.Application(loop=loop)
     app.on_startup.append(create_pool)
     # app.on_startup.append(create_pool_pg)
 

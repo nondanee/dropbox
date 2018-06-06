@@ -15,7 +15,7 @@ def setup_routes(app):
     app.router.add_route("POST", "/signout", signout.route)
 
     # app.router.add_route("OPTIONS", "/test", test.route)
-    app.router.add_route("GET", "/test", test.route)
+    # app.router.add_route("GET", "/test", test.route)
     app.router.add_route("POST", "/upload", upload.route)
     app.router.add_route("OPTIONS", "/upload", upload.route)
     app.router.add_route("GET", "/list", ls.route)
