@@ -7,8 +7,6 @@ from aiohttp_session import get_session
 @asyncio.coroutine
 def route(request):
 
-    print(request.method)
-
     session = yield from get_session(request)
     if 'uid' in session:
         uid = session['uid']
@@ -35,7 +33,18 @@ def route(request):
 
         share_check = yield from cursor.fetchone()
 
-        if not share_check and request.method == 'POST':
+        if request.method == 'GET':
+
+            yield from cursor.close()
+            connect.close()
+
+            if share_check:
+                mark = encrypt(str(share_check[0]).zfill(8))
+                return toolbox.javaify(200,"ok",{"mark": mark})
+            else:
+                return toolbox.javaify(200,"empty")
+
+        elif not share_check and request.method == 'POST':
             yield from cursor.execute('''
                 INSERT INTO share VALUES(null,%s,now())
             ''',(file_check['id']))
@@ -43,16 +52,16 @@ def route(request):
             yield from cursor.execute('''
                 SELECT LAST_INSERT_ID()
             ''')
+
             last_insert = yield from cursor.fetchone()
             sid = last_insert[0]
+            mark = encrypt(str(sid).zfill(8))
 
             yield from connect.commit()
             yield from cursor.close()
             connect.close()
 
-            return toolbox.javaify(200,"success",{
-                # "bucket_mark": bucket_mark,
-            })
+            return toolbox.javaify(200,"success",{"mark": mark})
 
         elif share_check and request.method == 'DELETE':
 
@@ -60,26 +69,11 @@ def route(request):
                 DELETE FROM share WHERE id = %s
             ''',(share_check[0]))
 
-            return toolbox.javaify(200,"success",{
-                "link": bucket_mark,
-            })
-
             yield from connect.commit()
             yield from cursor.close()
             connect.close()
 
-            return toolbox.javaify(200,"success",{
-                "link": bucket_mark,
-            })
-
-        elif request.method == 'GET':
-
-            yield from cursor.close()
-            connect.close()
-
-            return toolbox.javaify(200,"success",{
-                # "link": bucket_mark,
-            })
+            return toolbox.javaify(200,"success")
 
         else:
 
